@@ -1,0 +1,117 @@
+---
+mode: "custom"
+title: "Netris Documentation"
+description: "Deploy and operate automated, multi-tenant networks for GPU clouds and AI infrastructure."
+---
+
+<section className="relative overflow-hidden border-b border-[#01358d]/10 bg-gradient-to-b from-white via-[#fff5f7] to-[#f6f8fd] dark:border-white/5 dark:from-[#08090c] dark:via-[#0b0c11] dark:to-[#05060a]">
+  <div className="netris-glow netris-glow-coral -top-40 -right-32 h-[560px] w-[560px]" />
+  <div className="netris-glow netris-glow-navy -bottom-52 -left-32 h-[520px] w-[520px]" />
+
+  <div className="relative mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-24">
+    <div className="grid items-center gap-12 lg:grid-cols-2">
+      <div>
+        <span className="inline-flex items-center gap-2 rounded-full border border-[#f9556d]/30 bg-white/70 px-3 py-1 text-xs font-semibold tracking-wide text-[#01358d] backdrop-blur-sm dark:border-[#f9556d]/40 dark:bg-white/5 dark:text-[#ffd3db]">
+          <span className="h-1.5 w-1.5 rounded-full bg-[#f9556d]" />
+          Netris 4.16 documentation
+        </span>
+
+        <h1 className="mt-5 text-4xl font-bold leading-[1.06] tracking-tight text-[#0d1b2a] sm:text-5xl lg:text-[3.65rem] dark:text-white">
+          Build and operate
+          <span className="block text-[#f9556d]">production AI networks</span>
+        </h1>
+
+        <p className="mt-6 max-w-xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
+          Plan your topology, deploy Netris, automate multi-tenant network services, and connect the infrastructure your GPU cloud depends on.
+        </p>
+
+        <div className="mt-8 flex flex-wrap items-center gap-3">
+          <a className="netris-btn-primary" href="/installation/installation">
+            Install Netris
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" style={{flexShrink: 0}} aria-hidden="true">
+              <path d="M5 12h13m0 0-5.5-5.5M18 12l-5.5 5.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </a>
+          <a className="netris-btn-secondary" href="/try-learn/nvidia-spectrum-x-scenario">Start a guided lab</a>
+        </div>
+
+        <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-600 dark:text-slate-400">
+          <a className="font-semibold text-[#01358d] dark:text-[#9dbcf5]" href="/netris-architecture">Architecture</a>
+          <a className="font-semibold text-[#01358d] dark:text-[#9dbcf5]" href="/supported-platform-matrix">Compatibility</a>
+          <a className="font-semibold text-[#01358d] dark:text-[#9dbcf5]" href="/release-notes">Release notes</a>
+        </div>
+      </div>
+
+      <div className="relative">
+        <div className="netris-hero-media overflow-hidden rounded-2xl border border-[#0d1b2a]/10 bg-[#08090c] dark:border-white/10">
+          <img src="/images/Netris-RA-Spectrum-X.png" alt="Netris architecture connecting Ethernet, Spectrum-X, NVIDIA NMX-C, SoftGates, agents, and the Netris Controller" className="block w-full" noZoom />
+        </div>
+        <p className="mt-3 text-center text-xs text-slate-500 dark:text-slate-400">Netris reference architecture for an Ethernet AI backend</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+  <h2 className="text-2xl font-bold tracking-tight text-[#0d1b2a] sm:text-3xl dark:text-white">Choose your path</h2>
+  <p className="mt-2 max-w-2xl text-base text-slate-600 dark:text-slate-400">The docs are organized around the job you need to finish, from evaluating the platform to running it in production.</p>
+  <div className="mt-8">
+    <CardGroup cols={2}>
+      <Card title="Understand Netris" icon="diagram-project" href="/introduction" cta="Explore the platform">Learn the core concepts, architecture, hardware requirements, and supported platforms.</Card>
+      <Card title="Deploy the platform" icon="download" href="/installation/installation" cta="Start installing">Install the controller, prepare network switches, and bring up SoftGate or host networking.</Card>
+      <Card title="Operate your fabric" icon="network-wired" href="/general-settings" cta="Manage the fabric">Configure sites, VPCs, IPAM, BGP, services, routing, and production observability.</Card>
+      <Card title="Connect your stack" icon="plug" href="/netris-ufm-integration" cta="Browse integrations">Integrate Netris with NVIDIA networking, Kubernetes, CloudStack, and Terraform.</Card>
+    </CardGroup>
+  </div>
+</section>
+
+<section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+  <h2 className="text-2xl font-bold tracking-tight text-[#0d1b2a] sm:text-3xl dark:text-white">Get to a working fabric</h2>
+  <p className="mt-2 max-w-2xl text-base text-slate-600 dark:text-slate-400">Follow the shortest route from design decisions to an automated network.</p>
+  <div className="mt-8">
+    <Steps>
+      <Step title="Validate your design">Review the <a href="/supported-platform-matrix">platform matrix</a>, <a href="/supported-switch-hardware">hardware requirements</a>, and <a href="/netris-architecture">reference architecture</a>.</Step>
+      <Step title="Install the control plane">Choose a <a href="/installation/installation">controller deployment</a>, including Kubernetes, K3s, and air-gapped options.</Step>
+      <Step title="Bring infrastructure online">Prepare your <a href="/switch-agent-installation">network switches</a>, then configure <a href="/site">sites</a>, inventory, and topology.</Step>
+      <Step title="Deliver network services">Create a <a href="/vpc">VPC</a>, attach <a href="/vnet">V-Nets</a>, and add services such as NAT, load balancing, or VPC peering.</Step>
+    </Steps>
+  </div>
+</section>
+
+<section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+  <h2 className="text-2xl font-bold tracking-tight text-[#0d1b2a] sm:text-3xl dark:text-white">Learn in a lab</h2>
+  <p className="mt-2 max-w-2xl text-base text-slate-600 dark:text-slate-400">Practice a complete workflow in a simulated environment before changing production infrastructure.</p>
+  <div className="mt-8">
+    <CardGroup cols={2}>
+      <Card title="GPU-as-a-Service with Spectrum-X" icon="microchip" href="/try-learn/nvidia-spectrum-x-scenario" cta="Start the Spectrum-X lab">Initialize the controller, launch a simulation, and build a server cluster for an AI cloud architecture.</Card>
+      <Card title="Netris operations with Kubernetes" icon="dharmachakra" href="/try-learn/onprem-k8s" cta="Start the Kubernetes lab">Install the Netris Operator and expose an application through an on-demand load balancer.</Card>
+    </CardGroup>
+  </div>
+</section>
+
+<section className="mx-auto max-w-7xl px-4 pt-16 sm:px-6 lg:px-8">
+  <h2 className="text-2xl font-bold tracking-tight text-[#0d1b2a] sm:text-3xl dark:text-white">Reference and support</h2>
+  <p className="mt-2 max-w-2xl text-base text-slate-600 dark:text-slate-400">Check compatibility, follow releases, or get help from the Netris community.</p>
+  <div className="mt-8">
+    <CardGroup cols={4}>
+      <Card title="Compatibility" icon="table-list" href="/supported-platform-matrix">Match Netris and NOS versions before deployment.</Card>
+      <Card title="Release notes" icon="clock-rotate-left" href="/release-notes">See what changed in every Netris release.</Card>
+      <Card title="Slack" icon="slack" href="https://netris.slack.com/">Get support from Netris engineers and the community.</Card>
+      <Card title="GitHub" icon="github" href="https://github.com/netrisai">Find the Operator, Terraform provider, and Helm charts.</Card>
+    </CardGroup>
+  </div>
+</section>
+
+<section className="mx-auto max-w-7xl px-4 pb-20 pt-16 sm:px-6 lg:px-8">
+  <div className="relative overflow-hidden rounded-2xl border border-[#f9556d]/20 bg-gradient-to-br from-[#fff5f7] via-white to-[#f4f7fd] px-6 py-12 text-center sm:px-12 dark:border-transparent dark:from-[#0b0c11] dark:via-[#0d1522] dark:to-[#08090c]">
+    <div className="netris-glow netris-glow-coral -top-32 left-1/2 h-72 w-72 -translate-x-1/2" />
+    <div className="relative">
+      <h2 className="text-2xl font-bold tracking-tight text-[#0d1b2a] sm:text-3xl dark:text-white">Ready to build your fabric?</h2>
+      <p className="mx-auto mt-3 max-w-2xl text-base text-slate-600 dark:text-slate-300">Start with the guided VPC workflow or install the Netris Controller in your environment.</p>
+      <div className="mt-7 flex flex-wrap items-center justify-center gap-3">
+        <a className="netris-btn-primary" href="/vpc-gateways-with-managed-fabric">Build your first VPC</a>
+        <a className="netris-btn-secondary" href="/installation/installation">Install the controller</a>
+      </div>
+    </div>
+  </div>
+</section>

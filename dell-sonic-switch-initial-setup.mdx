@@ -1,0 +1,107 @@
+---
+title: "Dell SONiC Switch Initial Setup"
+sidebarTitle: "Dell SONiC"
+---
+
+<Note>
+  Further installation requires a Console and Internet connectivity via the management port!
+</Note>
+
+If the switch has pre-installed network operating system (NOS), it needs to be uninstalled first.
+
+1. NOS Uninstall (if pre-installed)
+
+To uninstall the current NOS, access **ONIE** from the GRUB menu and select the  **Uninstall OS** option.
+
+<Frame>
+  <img src="/images/uninstallOS.png" alt="uninstallOS" />
+</Frame>
+
+Once it's done, the switch will automatically reboot and get ready for the installation of Dell SONiC.
+
+2. NOS Install
+
+If there is no DHCP in the management network, stop the onie-discovery service and configure an IP address and default gateway manually.
+
+```shell
+onie-discovery-stop
+```
+
+```shell
+ip addr add <management IP address/prefix> dev eth0
+```
+
+```shell
+ip route add default via <gateway of the management network>
+```
+
+```shell
+echo "nameserver <DNS server address>" > /etc/resolv.conf
+```
+
+The Dell SONiC image should be available on a web server to which the switch has access through the local network or the Internet.
+
+Example:
+
+```shell
+onie-nos-install http://192.168.100.10/Enterprise_SONiC_OS_4.1.1_Enterprise_Premium.bin
+```
+
+After completion of the installation, the switch will automatically reboot.
+
+To login use the default username and password:
+
+`admin/YourPaSsWoRd`
+
+3. Set up the Out-of-Band (OOB) Management.
+
+Upon the initial boot of the newly installed NOS, please wait until the message "System is ready" appears, typically resembling the following:
+
+```shell
+May 03 15:02:35.430469 System is ready
+```
+
+Once this message is displayed, proceed to disable ZTP using the following commands:
+
+```shell
+admin@sonic:~$ sonic-cli
+sonic# configure
+sonic(config)# no ztp enable
+```
+
+Wait once more until the "System is ready" message reappears. This may take approximately 1-2 minutes. If there isn't a DHCP server available in the Out-of-Band (OOB) management network to ensure the switch's connection to the internet, you'll need to configure the Management IP address, gateway, and nameservers using the following commands:
+
+```shell
+admin@sonic:~$ sonic-cli
+sonic# configure
+sonic(config-if-Management0)# interface Management 0
+sonic(config-if-Management0)# ip address <MGMT-IPv4>/<MGMT-SUBNET-MASK> gwaddr <MGMT-SUBNET-GATEWAY>
+sonic(config)# exit
+sonic(config)# ip name-server <DNS-SERVER1>
+sonic(config)# ip name-server <DNS-SERVER2>
+sonic(config)# end
+sonic# write memory
+sonic# exit
+```
+
+4. Netris agent installation.
+
+Navigate to the Net–&gt;Inventory section and click the three vertical dots (⋮) on the right side of the switch you are provisioning. Then click Install Agent, copy the one-line installer command to your clipboard and paste in the switch.
+
+<Frame>
+  <img src="/images/Dell-Switch-agent-installation-Inventory.png" alt="Dell Switch agent installation Inventory" />
+</Frame>
+
+<Frame>
+  <img src="/images/Dell-Switch-agent-installation-oneliner.png" alt="Dell Switch agent installation oneliner" />
+</Frame>
+
+<Frame>
+  <img src="/images/Dell-Switch-agent-installation-cli.png" alt="Dell Switch agent installation cli" />
+</Frame>
+
+5. Reboot the switch
+
+```shell
+sudo reboot
+```

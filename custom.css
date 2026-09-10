@@ -1,0 +1,185 @@
+/* Netris documentation — source-parity styling.
+ *
+ * Tokens come from the source docs stylesheet
+ * (https://www.netris.io/docs/en/latest/_static/styles.css) and the Netris
+ * marketing site (https://www.netris.io). Anything Mintlify can express in
+ * docs.json — theme, brand ramp, fonts, logo, favicon, navigation — lives
+ * there; this file only covers what docs.json cannot.
+ */
+
+:root {
+  /* Source link / sidebar-caption navy. Also docs.json colors.primary. */
+  --netris-navy: #01358d;
+  /* netris.io light blue; docs.json colors.light (dark-mode emphasis). */
+  --netris-blue-bright: #609fff;
+
+  /* Brand coral, verbatim from the source stylesheet. Used for decorative and
+   * large-text surfaces where its 3.21:1 on white clears the large-text bar. */
+  --netris-coral: #f9556d;
+  /* Deeper coral for filled buttons, so white label text reaches 4.5:1. */
+  --netris-coral-strong: #da3756;
+  --netris-coral-strong-hover: #c22c48;
+}
+
+/* --- Navbar logo -------------------------------------------------------- *
+ * The source renders its wordmark at max-width 95px (~50px tall). Mintlify's
+ * default nav logo height is 24px, which shrinks the Netris mark to ~48px wide.
+ */
+img.nav-logo {
+  height: 2.75rem;
+}
+
+/* --- Links ------------------------------------------------------------- *
+ * `colors.primary` already gives body links the source's navy. The source adds
+ * a coral underline sweep on hover (styles.css `.wy-menu-vertical a:hover::before`
+ * and friends); mirror that with a coral hover treatment.
+ */
+#content-area a:not(.card):not([class*="netris-btn"]):not(.nav-anchor):hover {
+  color: var(--netris-coral-strong);
+  text-decoration-color: var(--netris-coral);
+}
+
+.dark #content-area a:not(.card):not([class*="netris-btn"]):not(.nav-anchor):hover {
+  color: var(--netris-coral);
+  text-decoration-color: var(--netris-coral);
+}
+
+/* Cards keep Mintlify's own treatment; only the hover edge picks up the brand. */
+#content-area a.card:hover {
+  border-color: color-mix(in srgb, var(--netris-coral) 55%, transparent);
+}
+
+/* --- Tables ------------------------------------------------------------ *
+ * Mintlify already wraps every table in a horizontal scroll area with an edge
+ * fade, so the wide reference matrices (6-8 columns) scroll natively. Do not
+ * add `display: block; overflow-x: auto` to the table itself — that replaces
+ * the scroll area and lets the table overflow the content column instead.
+ */
+#content-area table th,
+#content-area table td {
+  vertical-align: top;
+}
+
+/* A `:header-rows: 0` source table has no header row; hide the empty Markdown
+ * header band instead of leaving a blank stripe above the first row.
+ */
+#content-area thead:has(th:empty:only-child),
+#content-area thead:has(th:empty + th:empty) {
+  display: none;
+}
+
+/* --- CTA buttons -------------------------------------------------------- *
+ * Mintlify has no native <Button>; the canonical pattern is a styled <a> with a
+ * class defined here. Shapes mirror netris.io's fully-rounded pills.
+ */
+.netris-btn-primary,
+.netris-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25rem;
+  text-decoration: none !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.netris-btn-primary {
+  background-color: var(--netris-coral-strong);
+  color: #ffffff !important;
+  box-shadow: 0 12px 24px -10px rgba(218, 55, 86, 0.6);
+}
+
+.netris-btn-primary:hover {
+  background-color: var(--netris-coral-strong-hover);
+  box-shadow: 0 14px 28px -10px rgba(218, 55, 86, 0.75);
+}
+
+.netris-btn-secondary {
+  background-color: #ffffff;
+  border: 1px solid rgba(13, 27, 42, 0.2);
+  color: #0d1b2a !important;
+}
+
+.netris-btn-secondary:hover {
+  border-color: rgba(13, 27, 42, 0.42);
+}
+
+.dark .netris-btn-secondary {
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.25);
+  color: #ffffff !important;
+}
+
+.dark .netris-btn-secondary:hover {
+  background-color: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.45);
+}
+
+.netris-btn-primary:focus-visible,
+.netris-btn-secondary:focus-visible {
+  outline: 2px solid var(--netris-coral-strong);
+  outline-offset: 2px;
+}
+
+/* --- Home page --------------------------------------------------------- *
+ * index.mdx uses mode: "custom" (Strategy B — shared navbar chrome, with the
+ * sidebar, TOC, page header and footer-nav natively hidden). Only genuine
+ * leftovers are trimmed here.
+ */
+html[data-current-path="/"] #content-side-layout {
+  display: none;
+}
+
+/* Soft brand glows behind the hero and closing CTA. Implemented as radial
+ * gradients rather than Tailwind `blur-*` utilities: Mintlify's Tailwind build
+ * does not reliably emit the blur filter, which leaves hard-edged circles.
+ */
+.netris-glow {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 9999px;
+  background: radial-gradient(closest-side, var(--netris-glow-color, var(--netris-coral)) 0%, transparent 72%);
+  opacity: 0.16;
+}
+
+.dark .netris-glow {
+  opacity: 0.3;
+}
+
+.netris-glow-coral {
+  --netris-glow-color: var(--netris-coral);
+}
+
+.netris-glow-navy {
+  --netris-glow-color: var(--netris-navy);
+}
+
+/* The marketing site backs its hero headline with a green glow; mirror it in
+ * dark mode only, where the canvas is dark enough to carry it.
+ */
+.dark .netris-glow-navy {
+  --netris-glow-color: #00d084;
+  opacity: 0.22;
+}
+
+/* Hero product-diagram frame. */
+.netris-hero-media {
+  box-shadow: 0 30px 60px -30px rgba(13, 27, 42, 0.45);
+}
+
+.dark .netris-hero-media {
+  box-shadow: 0 30px 60px -30px rgba(0, 0, 0, 0.8);
+}
+
+/* --- Typography -------------------------------------------------------- */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  letter-spacing: -0.01em;
+}

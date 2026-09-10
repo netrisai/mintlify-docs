@@ -1,0 +1,98 @@
+---
+title: "EdgeCore SONiC Switch Initial Setup"
+sidebarTitle: "EdgeCore SONiC"
+---
+
+<Note>
+  Further installation requires a Console and Internet connectivity via the management port!
+</Note>
+
+If the switch has pre-installed network operating system (NOS), it needs to be uninstalled first.
+
+1. NOS Uninstall (if pre-installed)
+
+To uninstall the current NOS, access **ONIE** from the GRUB menu and select the  **Uninstall OS** option.
+
+<Frame>
+  <img src="/images/uninstallOS.png" alt="uninstallOS" />
+</Frame>
+
+Once it's done, the switch will automatically reboot and get ready for the installation of EC SONiC.
+
+2. NOS Install
+
+If there is no DHCP in the management network, stop the onie-discovery service and configure an IP address and default gateway manually.
+
+```shell
+onie-discovery-stop
+```
+
+```shell
+ip addr add <management IP address/prefix> dev eth0
+```
+
+```shell
+ip route add default via <gateway of the management network>
+```
+
+```shell
+echo "nameserver <DNS server address>" > /etc/resolv.conf
+```
+
+The NOS image should be available on a web server to which the switch has access through the local network or the Internet.
+
+Example:
+
+```shell
+onie-nos-install http://192.168.100.10/Edgecore-SONiC_20211125_074752_ec202012_227.bin
+```
+
+After completion of the installation, the switch will automatically reboot.
+
+To login use the default username and password:
+
+`admin/YourPaSsWoRd`
+
+3. Set up the Out-of-Band (OOB) Management.
+
+Disable ztp:
+
+```shell
+ztp disable -y
+```
+
+Configure the IP address, default gateway, and DNS to establish Internet connectivity via the management port.
+
+```shell
+ip addr add <management IP address/prefix> dev eth0
+```
+
+```shell
+ip route add default via <gateway of management network>
+```
+
+```shell
+echo "nameserver <dns server>" > /etc/resolv.conf
+```
+
+4. Netris agent installation.
+
+Navigate to the Net–&gt;Inventory section and click the three vertical dots (⋮) on the right side of the switch you are provisioning. Then click Install Agent and copy the one-line installer command to your clipboard.
+
+<Frame>
+  <img src="/images/Switch-agent-installation-Inventory.png" alt="Switch agent installation Inventory" />
+</Frame>
+
+<Frame>
+  <img src="/images/Switch-agent-installation-oneliner.png" alt="Switch agent installation oneliner" />
+</Frame>
+
+<Frame>
+  <img src="/images/Switch-agent-installation-cli.png" alt="Switch agent installation cli" />
+</Frame>
+
+5. Reboot the switch
+
+```shell
+sudo reboot
+```

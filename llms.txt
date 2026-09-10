@@ -1,0 +1,103 @@
+# Netris Documentation
+
+> Netris is the network automation, abstraction, and multi-tenancy platform for GPU clouds and AI factories. This index covers installing the Netris Controller, managing switch fabrics, and running cloud-style network services on them.
+
+## Docs
+
+- [Welcome to Netris Documentation](/index.md): Documentation home, with the recommended reading order for a first Netris deployment.
+
+## Get Started
+
+- [Introduction to Netris](/introduction.md): Netris is the leading provider of network automation and multi-tenancy for AI infrastructure.
+- [Definitions](/definitions.md): The following nomenclature appears throughout this documentation.
+- [Netris Architecture](/netris-architecture.md): This page describes the components of a Netris deployment and how they fit together.
+
+## Try & Learn Netris
+
+- [Lab Scenario: GPU-as-a-Service network with NVIDIA Spectrum-X architecture](/try-learn/nvidia-spectrum-x-scenario.md): Start with a blank Netris Controller. SSH to the Netris controller server and cd /home/ubuntu/netris-init/netris-spectrum-x-init.
+- [Learn Netris Operations with Kubernetes](/try-learn/onprem-k8s.md): The Sandbox environment offers a pre-existing 3 node Kubernetes cluster deployed through K3S in HA Mode.
+
+## Reference
+
+- [Netris Supported Functionality & Platforms Matrix](/supported-platform-matrix.md): Netris also integrates with NVIDIA UFM and NVIDIA NMX-C to automate partition management across NVIDIA Quantum InfiniBand and NVL72 fabrics.
+- [Hardware Requirements](/supported-switch-hardware.md): The Netris Controller requires at least three (for HA) Ubuntu 24.04 bare-metal servers with the specs below.
+
+## Installation
+
+- [Controller Installation](/installation/installation.md): Netris Controller is installed as a Kubernetes application on dedicated bare-metal hosts.
+- [Installing HA Netris Controller in Air-Gapped Environments](/installation/controller-k3s-air-gap-ha.md): In many production or regulated environments, network connectivity is tightly restricted for security or compliance reasons.
+- [Helm Chart Installation](/installation/controller-k8s-installation.md): In order to install the Helm chart, you must follow these steps:
+- [Zero Touch Provisioning (ZTP)](/installation/ztp.md): Netris Zero Touch Provisioning (ZTP) automates the initial configuration and onboarding of Netris-managed switches.
+- [Network Switch Initial Setup](/switch-agent-installation.md)
+- [Nvidia Cumulus v5.9+ Switch Initial Setup](/nvidia-cumulus-v5.9-plus-switch-initial-setup.md): Further installation requires a Console and Internet connectivity via the management port!
+- [Nvidia Cumulus v5 Switch Initial Setup](/nvidia-cumulus-v5-switch-initial-setup.md): Further installation requires a Console and Internet connectivity via the management port!
+- [Nvidia Cumulus v3.7 Switch Initial Setup](/nvidia-cumulus-v3.7-switch-initial-setup.md): Further installation requires a Console and Internet connectivity via the management port!
+- [EdgeCore SONiC Switch Initial Setup](/edgecore-sonic-switch-initial-setup.md): Further installation requires a Console and Internet connectivity via the management port!
+- [Dell SONiC Switch Initial Setup](/dell-sonic-switch-initial-setup.md): Further installation requires a Console and Internet connectivity via the management port!
+- [Ubuntu SwitchDev Switch Initial Setup](/ubuntu-switchdev-switch-initial-setup.md): Further installation requires a Console and Internet connectivity via management port!
+- [SoftGate HS](/netris-softgate-hs.md): In multi-tenant environments, tenants typically require controlled ingress and egress connectivity to their VPCs.
+- [Netris Host Networking](/ai-netris-host-networking.md): The Netris Host Networking Plugin is an optional component that automates the host-side networking required for GPU servers running on NVIDIA Spectrum-X East-West…
+- [Installing BlueField-3 DPUs](/bluefield-3-dpu-installation.md): New to BlueField-3 DPUs? Read the Overview and "What Is a DPU" sections on BlueField-3 DPU Support in Netris first for background on what a DPU is and how Netris uses…
+
+## Fabric Management
+
+- [General Settings](/general-settings.md): Settings → General holds the controller-wide parameters of a Netris Controller.
+- [Netris Site](/site.md): A Netris Site is a discrete physical deployment — a region, data center, or other location.
+- [VPC](/vpc.md): A Virtual Private Cloud (VPC) is the essence of Multi-Tenancy, one of the three pillars of the Netris NAAM (Network Automation, Abstraction, and Multi-Tenancy) platform…
+- [Inventory](/topology-management.md): The Inventory section allows you to add/edit/delete network switches and SoftGates (VPC gateways).
+- [Inventory Profiles](/inventory-profile.md): Inventory profiles allow security hardening of inventory devices and fabric-wide configuration optimizations.
+- [IP Address Management (IPAM)](/ipam.md): Netris IPAM is the address-space source of truth every address-consuming object in Netris depends on: V-Net gateways and DHCP pools, NAT and L4 Load Balancer address…
+- [BGP](/bgp.md): Netris uses BGP to connect tenant VPCs and management networks to the world outside the Netris-managed fabric — upstream carriers, non-Netris-managed data center…
+- [Network Interfaces](/network-interfaces.md): Switch ports can be directly managed in the Network Interfaces UI section.
+- [Link Aggregation (LAG)](/lag.md): Link Aggregation (LAG), also known as link bundling, Ethernet/network/NIC bonding, or port teaming, is a method of combining (aggregating) multiple network connections…
+- [Maintenance Mode](/maintenance-mode.md): Maintenance mode is intended to assist in smoothly redirecting traffic away from a particular device for a maintenance to be carried out with minimal impact on your…
+- [Static Routing](/static-routing.md): Located under Network → Routes is a method for describing static routing policies that Netris will dynamically inject on switches and/or SoftGate where appropriate.
+
+## Services
+
+- [V-Net](/vnet.md): A V-Net (Virtual Network) is a Netris construct for grouping switch ports into a defined network segment—much like a traditional VLAN or a public cloud subnet.
+- [DHCP and DHCP Relay](/dhcp-and-dhcp-relay.md): L2VPN routed V-Nets (where an IP gateway is added) may also be configured with a DHCP service fully managed by Netris and hosted on SoftGate.
+- [Link Aggregation and Multihoming](/link-aggregation-and-multihoming.md): Link Aggregation (LAG), also known as link bundling, Ethernet/network/NIC bonding, or port teaming, is a method of combining (aggregating) multiple network interfaces…
+- [Server Cluster](/server-cluster.md): Netris Server Cluster makes it possible to define network boundaries by referencing a list of compute or storage nodes (Netris Server objects).
+- [NAT](/nat.md): If you utilize private address space for your hosts, you may need a NAT service to enable internet access.
+- [L4 Load Balancer (L4LB)](/l4-load-balancer.md): Netris L4 Load Balancer (L4LB) leverages SoftGate(Linux router) nodes to provide Layer-4 load balancing services, including on-demand cloud load balancing with native…
+- [VPC Peering](/vpc-peering.md): VPC peering allows routing between two VPCs.
+- [VPC Connect](/vpc-connect.md): VPC Connect provides a mechanism for connecting tenant VPCs with external networks, including non-Netris-managed data center networks, WAN routers, and security…
+- [Access Control Lists (ACL)](/acls.md): Netris supports ACL-based network access control on managed switch fabrics.
+
+## Netris Integrations
+
+- [NVIDIA UFM (InfiniBand) Integration Plugin for Netris Controller](/netris-ufm-integration.md): The Netris-UFM plugin provides seamless integration between Netris Controller and NVIDIA UFM (Unified Fabric Manager) for AI infrastructures with hybrid InfiniBand and…
+- [NVIDIA NMX-C (NVLink) Integration Plugin for Netris Controller](/netris-nvlink-integration.md): The Netris NVLink plugin provides an integration between your Netris Controller and NVIDIA NMX Controller (NMX-C) for AI infrastructures that include NVIDIA NVLink…
+- [Kubernetes Integration](/kubernetes-integration.md): Netris integrates with Kube API to provide on-demand load balancer and other Kubernetes specific networking features.
+- [Netris-CloudStack Integration](/cloudstack/netris-cloudstack.md)
+- [High-Level Concept of Integration](/cloudstack/netris-cloudstack_p1.md): The integration of Netris with Apache CloudStack provides a robust and scalable networking solution, addressing the limitations of traditional switch fabrics and…
+- [Prerequisites](/cloudstack/netris-cloudstack_p2.md): Switch fabric up & running and connected to ISP
+- [Server Configuration and Software Installation](/cloudstack/netris-cloudstack_p3.md): Here we are going to configure the servers' network, install the netris-cloudstack agents on hypervisors, install CloudStack management software on Server 1, and…
+- [Configuring CloudStack for Netris Integration](/cloudstack/netris-cloudstack_p4.md): This chapter focuses on initializing, configuring, and utilizing CloudStack to integrate seamlessly with the Netris Controller.
+- [Using CloudStack with Netris Isolation Method](/cloudstack/netris-cloudstack_p5.md): This chapter outlines how to use the CloudStack platform with the Netris isolation method.
+- [Terraform: Netris provider](/terraform-integration.md): Use Netris provider to interact with the many resources supported by Netris.
+- [EVPN on Host](/evpn-on-host.md): Traditionally, Software-Defined Networking (SDN) platforms have created virtual overlays on top of physical switch networks, operating with a control plane entirely…
+- [BlueField-3 DPU Support in Netris](/bluefield-3-dpus.md): Netris supports NVIDIA BlueField-3 Data Processing Units (DPUs) as managed network devices within a server's inventory.
+
+## Monitoring & Observability
+
+- [Graph Boards](/monitoring-observability/visibility.md): You can create custom graph boards with data sources available in different parts of the system.
+- [Topology & Wiring Validation](/monitoring-observability/topology-validation.md): Topology & wiring validation is designed to identify wiring errors and suggest fixes (how it is vs.
+- [NVIDIA NetQ Integration](/monitoring-observability/netq.md): NVIDIA® NetQ™ is a network operations tool set that provides visibility into overlay and underlay networks, enabling real-time troubleshooting across the entire data…
+- [Netris Healthchecks](/monitoring-observability/healthchecks.md): Netris includes built-in healthchecks to monitor the status of various network services and applications.
+- [Looking Glass](/monitoring-observability/looking-glass.md): The Looking Glass is a GUI-based tool for looking up routing information from a switch or SoftGate perspective.
+
+## Tutorials
+
+- [Getting Started with Switch-Fabric Manager & VPC](/vpc-gateways-with-managed-fabric.md)
+
+## Miscellaneous
+
+- [Accounts](/accounts.md): The accounts section is for the management of user accounts, access permissions, and tenants.
+- [Custom Configuration Snippets](/custom-configuration-snippets.md): Netris lets administrators deploy custom switch configurations using configuration snippets.
+- [Labels](/labels.md): Labels (sometimes called tags) can be used to automatically place hundreds of switch ports into a V-Net.
+
+## Release Notes
+
+- [Release Notes](/release-notes.md): Every Netris release from 2.8.0 to 4.16.0 as a dated timeline, newest first.

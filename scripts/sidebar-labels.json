@@ -1,0 +1,62 @@
+[
+  {
+    "slug": "try-learn/nvidia-spectrum-x-scenario",
+    "title": "Lab Scenario: GPU-as-a-Service network with NVIDIA Spectrum-X architecture",
+    "sidebarTitle": "GPU-as-a-Service with Spectrum-X"
+  },
+  {
+    "slug": "supported-platform-matrix",
+    "title": "Netris Supported Functionality & Platforms Matrix",
+    "sidebarTitle": "Functionality & Platforms Matrix"
+  },
+  {
+    "slug": "installation/controller-k3s-air-gap-ha",
+    "title": "Installing HA Netris Controller in Air-Gapped Environments",
+    "sidebarTitle": "HA Air-Gapped Installation"
+  },
+  {
+    "slug": "nvidia-cumulus-v5.9-plus-switch-initial-setup",
+    "title": "Nvidia Cumulus v5.9+ Switch Initial Setup",
+    "sidebarTitle": "Nvidia Cumulus v5.9+"
+  },
+  {
+    "slug": "nvidia-cumulus-v5-switch-initial-setup",
+    "title": "Nvidia Cumulus v5 Switch Initial Setup",
+    "sidebarTitle": "Nvidia Cumulus v5"
+  },
+  {
+    "slug": "nvidia-cumulus-v3.7-switch-initial-setup",
+    "title": "Nvidia Cumulus v3.7 Switch Initial Setup",
+    "sidebarTitle": "Nvidia Cumulus v3.7"
+  },
+  {
+    "slug": "edgecore-sonic-switch-initial-setup",
+    "title": "EdgeCore SONiC Switch Initial Setup",
+    "sidebarTitle": "EdgeCore SONiC"
+  },
+  {
+    "slug": "dell-sonic-switch-initial-setup",
+    "title": "Dell SONiC Switch Initial Setup",
+    "sidebarTitle": "Dell SONiC"
+  },
+  {
+    "slug": "ubuntu-switchdev-switch-initial-setup",
+    "title": "Ubuntu SwitchDev Switch Initial Setup",
+    "sidebarTitle": "Ubuntu SwitchDev"
+  },
+  {
+    "slug": "netris-ufm-integration",
+    "title": "NVIDIA UFM (InfiniBand) Integration Plugin for Netris Controller",
+    "sidebarTitle": "NVIDIA UFM (InfiniBand)"
+  },
+  {
+    "slug": "netris-nvlink-integration",
+    "title": "NVIDIA NMX-C (NVLink) Integration Plugin for Netris Controller",
+    "sidebarTitle": "NVIDIA NMX-C (NVLink)"
+  },
+  {
+    "slug": "vpc-gateways-with-managed-fabric",
+    "title": "Getting Started with Switch-Fabric Manager & VPC",
+    "sidebarTitle": "Switch-Fabric Manager & VPC"
+  }
+]

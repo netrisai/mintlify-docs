@@ -1,0 +1,1271 @@
+---
+title: "Release Notes"
+rss: true
+---
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.16.0.html */}
+<Update label="September 2, 2026" description="Netris 4.16.0 Release Notes" tags={["4.16.0"]}>
+  ### What's new in Netris 4.16.0?
+
+  This release brings centralized log forwarding to the switch fabric: syslog destinations are now configured once in an Inventory Profile and applied across every Netris-managed switch platform. It also adds support for Cumulus Linux 5.18.0, validation that rejects unworkable IPv6 Router Advertisement and route-map settings before they reach the fabric, along with fixes across VPC peering, V-Net configuration, ACL enforcement, and BGP session and port health reporting.
+
+  ### Features
+
+  - **Syslog Destination Configuration in Inventory Profiles**. Inventory Profiles now support syslog destination configuration, enabling switches to forward system logs to central logging infrastructure with no per-switch manual setup. Multiple destinations can be configured per profile, each specified as an IPv4 address or a fully qualified domain name, with port — and each with its own transport protocol and minimum severity level. Supported across all Netris-managed switch platforms and configurable through both UI and API.
+
+  ### Enhancements
+
+  - **Per-field hardware object updates**. Hardware objects can now be updated field by field through the Controller API, leaving attributes that are not included in the request untouched. Existing full-replacement updates continue to behave as before, so current automation is unaffected.
+  - **Cumulus Linux 5.18.0 support.** Netris is now validated on Cumulus Linux 5.18.0.
+
+  ### Bug fixes
+
+  - Fixed SoftGate installation hanging during the migration from Netplan to ifupdown on systems that do not ship a DHCP client package, such as Ubuntu 24.04.
+  - Fixed a VLAN ID collision during switch port translation that could leave the agent retrying configuration indefinitely. Affected platforms: Arista.
+  - Fixed a Site Default ACL Policy of Deny not being enforced for DNAT and IPv6 traffic. Affected platforms: SoftGate. Found in Netris 4.14 and later.
+  - Fixed Netris DHCP traffic being dropped when a Site's Default ACL Policy is set to Deny. Found in Netris 4.8 and later.
+  - Fixed missing notifications when an External BGP session on a SoftGate goes down. Found in Netris 4.14 and later.
+  - Fixed healthy switch ports being displayed in an unknown state. Affected platforms: all. Found in Netris 4.14 and later.
+  - Prefix lists can no longer be deleted while still referenced by a route-map. Affected platforms: all. Found in Netris 4.14 and later.
+  - IPv6 Router Advertisement settings are now validated so that the advertisement interval cannot exceed the router lifetime, and both values are checked against their supported ranges. Affected platforms: all. Found in Netris 4.15 and later.
+  - Fixed the switch agent attempting to configure interfaces that the Netris Controller has not yet discovered or inventoried, resulting in an invalid configuration. Affected platforms: Arista. Found in Netris 4.14 and later.
+  - Fixed VPC peering routes not being learned on switches that host only one of the two peered VPCs. Affected platforms: Cumulus. Found in Netris 4.15 and later.
+  - V-Net configuration is now fully withdrawn from the switch when the corresponding object is removed or disabled, including:
+
+    - anycast MAC address configuration when a gateway is removed from a V-Net
+    - bridge member configuration on member ports when a V-Net is disabled
+
+    Affected platforms: Cumulus. Found in Netris 4.15 and later.
+
+  ### Security fixes
+
+  No security fixes in this release.
+
+  **Deprecation Notices**
+
+  - **Switch fabric selection removed**. Every site is now managed as a Netris-native fabric, and the fabric selector has been removed from Site configuration in the UI. The `switchFabricProviders` attribute has been removed from the Sites API. `switchFabric` is still returned on read, always as `netris`, and is ignored if supplied on create or update; it will be removed in a future release.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.15.0.html */}
+<Update label="August 18, 2026" description="Netris 4.15.0 Release Notes" tags={["4.15.0"]}>
+  ### What's new in Netris 4.15.0?
+
+  This release focuses on expanded platform coverage and operational visibility: IPv6 Neighbor Discovery extends to SONiC and Arista, Custom Arista Configuration Snippets, and API Trace/Correlation IDs in the Netris API logs for end-to-end request tracking. It also includes fixes for topology visualization and Arista ACL handling.
+
+  ### Features
+
+  - **IPv6 Neighbor Discovery for V-Nets** (SONiC, Arista). A new IPv6 Neighbor Discovery configuration section on V-Nets lets operators explicitly control IPv6 RA behavior and advertise DNS server information alongside RA, including:
+
+    - Router Advertisement state (Enabled / Disabled / vendor Default) with configurable Lifetime and Interval per V-Net
+    - RDNSS (Recursive DNS Server) advertisement per RFC 8106 — up to three IPv6 DNS servers with configurable lifetime, so IPv6 clients receive DNS server information via RA without requiring DHCPv6
+  - **Custom Arista Configuration Snippets**. Snippets are plain EOS CLI configuration fragments. The agent merges them into the configuration it generates before that configuration is applied to the switch, giving you a supported path to apply local customizations.
+  - **API Trace/Correlation ID in Netris API Logs**. Netris API logs now include a unique Trace ID (correlation ID) attached to each request. The ID lets you follow a single request end to end across the API logs, and it can carry end-customer or tenant context so activity can be attributed to the originating tenant.
+
+  ### Enhancements
+
+  No new enhancements were added in this release.
+
+  ### Bug fixes
+
+  - Fixed a topology drawing issue where switches in the Super-Spine role for north-south connectivity were rendered above, rather than below, the leaf and spine switches used for east-west connectivity.
+  - Resolved an issue where permission groups and user roles could be deleted even when actively assigned to users, which caused affected users to incorrectly became as "Permit All."
+  - Resolved an issue where entering an invalid value in the E-BGP VLAN ID field did not display a validation error message.
+  - Resolved an issue where entering an invalid value in the V-Net VLAN ID field did not display a validation error message.
+  - Resolved an issue on Arista platforms where changing the ACL Default Policy from Permit to Deny did not apply the corresponding access-lists to switch interfaces, resulting in all IPv4 and IPv6 traffic being allowed regardless of the configured policy.
+  - Resolved an issue on Arista platforms where IPv6 ACL deny rules did not block traffic between hosts in different VPCs. The agent was generating access-list entries using the generic `ipv6` keyword instead of the specific protocol keyword (e.g., `icmpv6`, `tcp`), causing deny policies to be ineffective for IPv6 traffic.
+  - Resolved an issue where monitoring data on the Dashboard would intermittently disappear.
+  - Resolved an issue where BGP sessions were established and healthy on the switch, but the controller's `check_bgp` monitor incorrectly reported the state as "unknown" for affected switches.
+  - Resolved an issue where the RAM utilization graph on the Dashboard displayed incorrect values that did not match the `check_memory` monitor.
+  - Fixed custom static default routes configured in the system VPC on a SoftGate not being advertised into other VPCs. Applies to IPv4 and IPv6.
+  - Fixed the Default Originate option on a SoftGate's external BGP neighbors not advertising a default route to the peer.
+
+  ### Security fixes
+
+  - [CVE-2026-46595](https://www.cve.org/CVERecord?id=CVE-2026-46595): a critical vulnerability in the Go standard library's `golang.org/x/crypto/ssh` package that could allow an attacker to bypass source-address validation during SSH authentication when a non-public-key callback method is used. Fix is planned across affected Netris components (controller-telescope, netris-operator, mongodb).
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.14.0.html */}
+<Update label="July 31, 2026" description="Netris 4.14.0 Release Notes" tags={["4.14.0"]}>
+  ### What's new in Netris 4.14.0?
+
+  Netris 4.14.0 is a feature release focused on fabric flexibility and multi-tenant scale. It decouples BGP session placement from physical port topology and exposes InfiniBand fabric path visibility through the Netris API. It also extends DHCPv6 relay support to more switch platforms, extends Server Cluster provisioning, and ships a substantial set of platform bug fixes.
+
+  <Note>
+    **Apache CloudStack integration.** Enhancements to the Netris integration for Apache CloudStack are landing alongside 4.14.0. This work is delivered as part of the CloudStack codebase and is mentioned here for awareness. Please, contact Netris for more details.
+  </Note>
+
+  ### Features
+
+  - **BGP Session and Peer-Port Decoupling (Cumulus)**. On Cumulus, configure a BGP session on one switch while the port facing the BGP peer resides on another switch, giving you full flexibility in how BGP sessions are distributed across the fabric — independent of where peer connectivity physically lands. Works with any peer type (firewall, router, or server), and existing same-switch BGP configurations continue to work unchanged.
+  - **InfiniBand Fabric Topology Visibility via API (UFM Integration)**. Query the full InfiniBand fabric path for any bare-metal GPU server directly through the Netris API, with each switch hop identified by tier (leaf, spine, and core). List and filter servers by switch to support placement, blast-radius analysis, and maintenance planning, with UFM-sourced data and freshness indicators.
+
+  ### Enhancements
+
+  - **DHCPv6 Relay for V-Nets (Arista)**. Extends DHCPv6 relay support to Arista, so V-Nets can relay DHCPv6 requests to an external DHCPv6 server for both L2VPN and L3VPN configurations — including across VPC peering to a centralized server — completing IPv6 parity with existing IPv4 DHCP relay.
+  - **VLAN ID Selection for Server Clusters**. Specify a VLAN ID per V-Net at Server Cluster creation instead of relying only on automatic allocation, so cluster VLANs align with an externally planned numbering scheme.
+  - **Per-V-Net VPC Selection in Server Clusters**. Assign each V-Net in a Server Cluster to a different VPC at creation time, instead of the whole cluster mapping to a single VPC, so resources can be split across separate administrative domains within one cluster. Default single-VPC behavior is unchanged.
+
+  ### Bug fixes
+
+  - Fixed unnecessary VRF creation on switches for V-Nets configured without an IP default gateway; only L2 VNI configuration is now applied.
+  - Fixed the disk-space monitoring check on Arista switches.
+  - Fixed the topology validation check on Arista switches.
+  - Fixed BGP ECMP paths being capped at 16 on Arista switches. Now configured to platform maximum.
+  - Fixed ACLs not being applied correctly on Arista switches where a trunk port reported its allowed VLANs as a range. Note: with this fix in place, some switches may now receive additional ACLs.
+  - Fixed topology diagram rendering to use the inventory-profile fabric type for correct switch placement.
+  - Fixed RDNSS configuration incorrectly rejecting valid IPv6 addresses.
+  - Fixed bond interfaces being auto-populated on Dell SONiC for V-Net members when Automatic Link Aggregation is disabled in the inventory profile.
+  - Fixed an issue where Netris would return “no V-net” to CloudStack hypervisors for recently created V-Nets, thus preventing workloads from deploying.
+  - Fixed ARP and neighbor entries silently not being programmed on CloudStack hosts using EVPN/VXLAN bridges. The interface list is now re-evaluated continuously, so interfaces that appear later, or that flap, are picked up automatically.
+  - Fixed the CloudStack agent creating VXLAN interfaces without the intended bridge-port settings. MAC learning is now disabled and ARP/ND neighbor suppression enabled on the VXLAN bridge port, as specified.
+  - Fixed V-Net search by label returning no results.
+
+  ### Security fixes
+
+  No security fixes in this release.
+
+  **Deprecation Notices**
+
+  - **Site Mesh removed**. Site Mesh is no longer supported. The Site Mesh main menu entry and the Site Mesh options in Site configuration have been removed from the controller UI, and the corresponding resources have been removed from the API and the Terraform provider. Automation and Terraform configurations that reference Site Mesh must be updated before upgrading.
+  - **MASQUERADE NAT action removed**. The MASQUERADE action was selectable in NAT configuration but was never supported by SoftGate. It has been removed. API and Terraform configurations that specify a MASQUERADE NAT rule are now rejected and must be updated before upgrading.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.13.0.html */}
+<Update label="July 15, 2026" description="Netris 4.13.0 Release Notes" tags={["4.13.0"]}>
+  ### What's new in Netris 4.13.0?
+
+  This release introduces the ability to configure IPv6 Neighbor Discovery (ND) Router Advertisement (RA) parameters, including Prefix Advertisement (PA) options and RDNSS, as well as standalone DHCPv6 relay support for V-Nets. The NVLink agent is now part of the standard Netris distribution for production NVL72 deployments, alongside added support for Cumulus Linux 5.16.5 and 5.16.6. Operators also gain background CSV exports that respect UI filters. Bug fixes across the eBGP page, LAG database consistency, Redis stability, port allocation, IPsec traffic handling by SoftGate, controller license reporting, and interface selection round out the release.
+
+  ### Features
+
+  - **IPv6 Neighbor Discovery for V-Nets** (Cumulus). A new IPv6 Neighbor Discovery configuration section on V-Nets lets operators explicitly control IPv6 RA behavior and advertise DNS server information alongside RA, including:
+
+    - Router Advertisement state (Enabled / Disabled / vendor Default) with configurable Lifetime and Interval per V-Net
+    - RDNSS (Recursive DNS Server) advertisement per RFC 8106 — up to three IPv6 DNS servers with configurable lifetime, so IPv6 clients receive DNS server information via RA without requiring DHCPv6
+  - **DHCPv6 Relay for V-Nets** (Cumulus). V-Nets can now relay DHCPv6 client requests to external DHCPv6 servers, including cross-VPC relay through VPC peering, bringing managed IPv6 address assignment to parity with existing IPv4 DHCP relay support.
+  - **NVLink Agent Installation in the Standard Netris Distribution**. The Netris NVLink agent is now installable through the standard Netris deployment workflow — supporting both controller-node co-location and dedicated-node topologies — so NVL72 deployments can reach production readiness through the same installation path as the rest of the platform.
+
+  ### Enhancements
+
+  - **CSV Export Enhancements**. CSV downloads now respect any filters applied in the UI, so exported data matches exactly what is displayed on screen. Downloads also run in the background, allowing navigation to other sections of the controller without interrupting an active export.
+  - **Cumulus Linux 5.16.5 and 5.16.6 support**. Netris is now validated on Cumulus Linux 5.16.5 and 5.16.6.
+
+  ### Bug fixes
+
+  - Fixed missing traffic graphs on the eBGP page.
+  - Fixed the local IP field remaining disabled when creating a BGP neighbor terminating on a V-Net.
+  - Fixed a LAG configuration error that left dangling LAG port entries in the database after all member ports had been removed.
+  - Fixed a port-conflict issue where a port already assigned to an L3VPN V-Net could be reused when creating a Server Cluster.
+  - Fixed an issue where IPsec traffic was not processed correctly by SoftGate and was dropped.
+  - Fixed switch agents repeatedly reporting an invalid controller license.
+  - Fixed selected interfaces not displaying in the Admin Up/Down panel when more than 20 interfaces were selected.
+
+  ### Security fixes
+
+  No security fixes in this release.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.12.0.html */}
+<Update label="July 2, 2026" description="Netris 4.12.0 Release Notes" tags={["4.12.0"]}>
+  ### What's new in Netris 4.12.0?
+
+  This release expands observability with native NVIDIA NetQ integration, adds the ability to explicitly designate EVPN Route Servers to improve scalability in larger fabric topologies, and introduces configurable ESI-ID generation for multi-homing deployments. It also brings Cumulus Linux 5.16+ compatibility improvements for newer NVIDIA hardware and BER monitoring, strengthens Cumulus agent resilience during transient fabric events, makes large-deployment inventory easier to navigate with new filtering options, and delivers reliability improvements across HA upgrades, large-scale deployments, and host networking.
+
+  ### Features
+
+  - **NVIDIA NetQ Integration**. Operators can now enable and configure the NVIDIA NetQ telemetry agent on Cumulus Linux switches directly from the Netris Controller — via UI, API, or Terraform. Once enabled, switches automatically begin delivering telemetry to the configured NetQ server without requiring per-switch manual configuration.
+  - **EVPN Route Server Assignment** (Cumulus Linux). Operators can now manually designate any switch(es) as an EVPN Route Server directly in the Netris Controller inventory. This overrides the automatic selection logic that relies on pure-clos spine/super-spine roles, enabling BGP EVPN overlay optimization in complex fabric designs.
+  - **Configurable ESI-ID Generation Method** (Cumulus Linux). Operators can now select the ESI-ID generation method per inventory profile, choosing between server-ID-based and the default partner-MAC-based logic. The setting defaults to disabled, so existing deployments retain their current ESI-ID behavior with no change required upon upgrade. When server-ID-based generation is enabled, the transition is backwards compatible: servers not modeled in Netris automatically fall back to partner-MAC generation. The method change is applied gracefully across the fabric with no BGP session drops or traffic interruption. Configurable via UI, API, and Terraform.
+
+  ### Enhancements
+
+  - **Inventory Filtering**. The Inventory page now supports filtering by ASN, inventory profile, switch role, server role, and softgate role, making it easier to locate and manage specific devices in large deployments.
+  - **DHCP Relay Configuration Preservation**. Netris agent now preserves DHCP relay configuration during transient state changes — such as FRR restarts or uplink flaps — rather than removing and re-adding it, preventing unnecessary configuration churn during fabric instability.
+  - **ECMP Scaling** (NVIDIA hardware). On hardware that supports more than 64 ECMP entries, the agent now configures the appropriate multipath value based on the hardware's limits, improving East-West performance in quad-plane deployments.
+  - **BER (Bit Error Rate) support on Cumulus Linux 5.16.4+**. The Bit Error Rate monitoring check now supports Cumulus Linux 5.16.4 and newer.
+
+  ### Bug fixes
+
+  - Fixed a database corruption issue that could occur during a failed controller upgrade. The controller now automatically restores the database to its pre-upgrade state when an upgrade fails.
+  - Fixed NHN (Netris Host Networking) IPv6 address assignment failing under certain conditions on Cumulus switches. IPv6 address is now correctly advertised in custom LLDP message.
+  - Fixed an issue where ZTP may fail under high load conditions in deployments with multiple controller instances managing a large number of switches at a single site.
+  - Fixed VNet creation with a large number of ports via the Terraform Provider failing intermittently under database load; requests now complete reliably without timing out.
+  - Fixed Terraform Provider requiring the now obsolete ROH argument.
+  - Fixed Cumulus agent not removing automatically-generated bonds when auto-aggregation is disabled, and no bonds remain in the server configuration.
+  - Fixed UI bug preventing V-Net selection when creating E-BGP objects.
+
+  ### Security fixes
+
+  No security fixes in this release.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.11.0.html */}
+<Update label="June 15, 2026" description="Netris 4.11.0 Release Notes" tags={["4.11.0"]}>
+  ### What's new in Netris 4.11.0?
+
+  <Warning>
+    Data loss warning: When upgrading from Netris version 4.9 or earlier, historical monitoring data is not preserved. Future Netris releases will automatically preserve monitoring data during upgrades.
+  </Warning>
+
+  ### Features
+
+  - **Per-Port FEC Configuration**. Allows operators to configure Forward Error Correction (FEC) mode per physical port via the Netris Controller UI and API. Supported on Cumulus, SONiC, and Arista platforms.
+
+  ### Enhancements
+
+  - **Performance at Scale**. Improved controller performance and responsiveness for large-scale deployments, including:
+
+    - Topology
+    - Network Links
+    - Network Interfaces
+    - Looking Glass
+  - **InfiniBand Debug Messages**. Updated debug-mode log messages for the InfiniBand (IB) integration to be more descriptive and more actionable when troubleshooting.
+
+  ### Bug fixes
+
+  - Fixed Cumulus agent entering a loop when a route-map was created without a match rule; empty route-map sequences are now skipped safely.
+  - Fixed DNAT not working when backend IPs configured under the L4LB used the same ports as DNAT rules.
+  - Fixed Terraform silently accepting undefined Fabric Type values (e.g., "ew-plane5"), which resulted in a blank Fabric Type in the controller.
+  - Fixed wrong prefix length in the prefix-list used for Cumulus VPC peering; the agent now configures `min-prefix-len`.
+  - Fixed VPC Peering on Cumulus not propagating prefixes through a transit VPC.
+  - Fixed VPC Peering on Cumulus not propagating static IPv6 routes.
+
+  ### Security fixes
+
+  No security fixes in this release.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.10.0.html */}
+<Update label="May 19, 2026" description="Netris 4.10.0 Release Notes" tags={["4.10.0"]}>
+  ### What's new in Netris 4.10.0?
+
+  <Warning>
+    Monitoring data loss will occur when upgrading to Netris 4.10.0. Time-series data store changes from Graphite to VictoriaMetrics. The database is reinitialized during the upgrade, resulting in the loss of historical monitoring data. Future Netris releases will include a migration tool to preserve monitoring data during upgrades.
+  </Warning>
+
+  ### Features
+
+  - **Inventory Switch Role**. Operators can now explicitly define each switch's role (generic, leaf, spine, super-spine), which influences how the BGP underlay and EVPN address family are configured in the fabric. Existing switches are automatically assigned a role based on their location naming convention during the upgrade process. Inferring the switch role from the switch name is deprecated starting with Netris 4.10.0. See [Adding Switches](/topology-management#adding-switches) for more details.
+  - **Inventory Profile: Fabric Type**. Adds a new Fabric Type (East-West, North-South, Out-of-Band, and General-Purpose) property to Inventory Profiles, allowing administrators to define the fabric tier and traffic directionality for each profile. See [Fabric Settings](/inventory-profile#fabric-settings) for more details.
+  - **Inventory Profile: Reference Architecture**. Adds a new Reference Architecture selector to Inventory Profiles, allowing administrators to associate a profile with a recommended deployment pattern. See [GPU Cluster Specific Settings](/inventory-profile#gpu-cluster-specific-settings) for more details.
+  - **Hardware Multi-Plane Support**. Adds support for multi-plane hardware configurations. See [GPU Cluster Specific Settings](/inventory-profile#gpu-cluster-specific-settings) for more details.
+  - **IP Address Family can be selected at Vnet level**. Allows administrators to specify the IP address family (IPv4, IPv6, or dual-stack) at the Vnet level.
+
+  ### Enhancements
+
+  - **Graphite to VictoriaMetrics Migration**. Replaces Graphite with VictoriaMetrics as the time-series database for monitoring data, improving performance and scalability.
+  - **Server Cluster Scalability**. Improved the server cluster add/edit API to support creating clusters with a large number of servers (5000+) in a single operation.
+  - **Swagger API Documentation**. Updated the Swagger API definitions with all missing API endpoints.
+  - **UFM Integration Enhancements**. Added support for securely changing server names, UFM synchronization debugging, dry-run mode, and change of reconciliation interval.
+
+  ### Bug fixes
+
+  - Fixed L4LB not working when 1:1 DNAT rules are configured for the same backend IPs.
+  - Fixed switch model not displaying correctly in the controller inventory for Cumulus Linux switches.
+  - Fixed IPv4 and IPv6 addresses displaying concatenated without proper separation in the UI Network Links view.
+  - Fixed IPv6 VPC peering not working as expected in multi-cluster topologies, a regression introduced in 4.9.0.
+  - Fixed CloudStack agent not cleaning up VRF interfaces after the last VM in a VRF VNet is migrated or deleted.
+  - Fixed suboptimal routing with VPC peering and EVPN Multihoming on Cumulus by implementing proper local leaking logic.
+  - Fixed agent applying incomplete configurations for adaptive routing, a regression introduced in 4.8.0.
+
+  ### Security fixes
+
+  No security fixes in this release.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.9.0.html */}
+<Update label="April 30, 2026" description="Netris 4.9.0 Release Notes" tags={["4.9.0"]}>
+  ### What's new in Netris 4.9.0?
+
+  ### Features
+
+  - **Added Reference Architecture type selector in Inventory Profiles**.
+  - **Added support for multi-plane Spectrum-X architecture to Netris Host Networking (NHN) plugin**.
+  - **Added support for Spectrum-X Reference Architecture version 2.1.2**.
+  - **Added support for ZTP of switches**.
+  - **Subnets of purpose type "Management" can now be used in Vnets and VPCs**.
+
+  ### Bug fixes and improvements
+
+  - Fixed NVUE agent issue where custom TLV records were not being purged from configuration when server objects contained customData json with networks defined and no remote port matching.
+  - Improved routing efficiency in VPC peering scenarios with EVPN-MH enabled.
+  - Improved /api/v2/ports/\{type\}/free API performance.
+  - Improved /api/v2/ebgp/hardwares APP performance.
+  - Improved /api/v2/hw/ports API performance.
+  - Improved /api/v2/vnet/ports API performance.
+  - Admin down ports no longer generate alerts.
+  - Fixed maintenance mode not being applied to SoftGate nodes when route-map was configured in E-BGP.
+  - Fixed syslog configuration changes not being applied to Cloudstack nodes.
+  - Fixed default Deny All policy not being applied.
+
+  **Deprecation Notices**
+
+  - Removed NHN plugin support for Spectrum-X Reference Architecture version 1.2
+  - Removed NHN plugin support for Spectrum-X Reference Architecture version 1.3
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.8.0.html */}
+<Update label="April 15, 2026" description="Netris 4.8.0 Release Notes" tags={["4.8.0"]}>
+  ### What's new in Netris 4.8.0?
+
+  ### Features
+
+  - **Added Cumulus 5.14 support**.
+  - **Added Cumulus 5.16 support**.
+
+  ### Bug fixes
+
+  - Improved inventory management API performance when creating or editing inventory items.
+  - Fixed IPSEC traffic being dropped on XDP-enabled SoftGates when 1:1 DNAT is in use.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.7.0.html */}
+<Update label="March 11, 2026" description="Netris 4.7.0 Release Notes" tags={["4.7.0"]}>
+  ### What's new in Netris 4.7.0?
+
+  ### Features
+
+  - **BlueField-3 DPU.** You can now use Netris to orchestrate BlueField-3 DPUs as part of your North-South network fabric. The DPU must be in DPU Zero-Trust mode and reachable from the Netris Controller.
+
+  ### Bug fixes
+
+  - Fixed disk space monitoring check incorrectly reporting disk usage on some platforms.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.6.1.html */}
+<Update label="February 27, 2026" description="Netris 4.6.1 Release Notes" tags={["4.6.1"]}>
+  ### What's new in Netris 4.6.1?
+
+  ### Features
+
+  This is a maitenance release focused on bug fixes and performance improvements. No new features were added in this release.
+
+  ### Enhancements
+
+  - **Add server NICs to V-Net**. Server NICs can now be added as V-Net endpoints. Netris will automatically calculate the appropriate switch ports to be added to the V-Net based on the topology information.
+
+  ### Bug fixes
+
+  - Fixed L4LB reset button.
+  - Fixed unabled to set gateway for management subnet.
+  - Fixed ZTP template generation for Arista and Cumulus switches.
+  - Resovled all known CVEs (Critical and High severity).
+
+  ### Security fixes
+
+  - Resolved 42 Crtical and 223 High severity CVEs in third-party dependencies.
+  - Updated Debian base container image to Debian 12 (Bookworm)
+  - Updated Alpine base container image to Alpine 3.19.9
+  - Updated Golang to 1.26.0
+  - Updated other affected dependencies to the following versions:
+
+    - nginx: 1.29.4-alpine
+    - bitnami / nginx / 1.29.5-2
+    - bitnami / redis / 8.6.1-0
+    - golang /google.golang.org/protobuf v1.34.1
+    - golang / google.golang.org/grpc / 1.65.0
+    - golang / golang.org/x/text / 0.34.0
+    - golang / golang.org/x/net / 0.50.0
+    - golang / golang.org/x/sys / 0.41.0
+    - golang / golang.org/x/crypto / 0.48.0
+    - golang / github.com/sirupsen/logrus / 1.9.4
+    - deb / debian/python3.9 / 3.9.2-1+deb11u5
+    - deb / debian/libpng1.6 / 1.6.37-3+deb11u2
+    - deb / debian/gnupg2 / 2.2.27-2+deb11u3
+    - rpm / photon/libxml2 / 2.12.10-8.ph5
+    - rpm / photon/openssl / 3.0.18-2.ph5
+    - rpm / photon/glibc / 2.36-22.ph5
+    - rpm / photon/Linux-PAM / 1.7.2-1.ph5
+    - npm / mongoose / 6.13.9
+    - npm / nodemailer / 8.0.1
+    - npm / netmask / 2.0.2
+    - npm / growl / 1.10.5
+    - npm / form-data / 4.0.5
+    - npm / minimatch / 10.2.4
+    - npm / braces / 3.0.3
+    - npm / serialize-javascript / 7.0.3
+    - npm / debug / 4.4.3
+    - npm / diff / 5.2.2
+    - npm / qs / 6.15.0
+    - npm / fresh / 0.5.2
+    - npm / @hapi/hoek / 9.3.0
+    - npm / glob-parent / 5.1.2
+    - npm / mocha / 9.2.2
+    - npm / semver / 7.7.4
+    - npm / redis / 3.1.2
+
+  **Deprecation Notices**
+
+  - Routing On Host ASN, Routing Profile
+  - VM ASN
+  - SoftGate (generic flavor)
+  - SoftGate PRO
+  - Calico ASN
+  - Built-in chat.
+  - Proxmox, Equinix metal, and PhoenixNap as supported platforms.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.6.0.html */}
+<Update label="February 10, 2026" description="Netris 4.6.0 Release Notes" tags={["4.6.0"]}>
+  ### What's new in Netris 4.6.0?
+
+  ### Features
+
+  - **EVPN-on-Host. Linux Host VTEP.** Any Ubuntu 24.04 host can be configured as an EVPN VTEP, therefore extending the VXLAN overlay into the host.
+  - **NVLink Multi-Node.** Netris can now create NVLink partitions in NVL72 and NVL144 equipped systems.
+  - **eBGP imports non-default routes.** The operator may now apply a BGP community 0:7 to signal Netris to import any non 0.0.0.0/0 eBGP prefixes into the VPC.
+  - **Control plane verification of VTEP reachability.** Netris managed VTEPs (switches and Softgates) keep track of the reachability of other Netris VTEPs.
+  - **CloudStack supported with Cumulus Linux.** CloudStack now integrates with Nvidia switch fabrics running Cumulus Linux.
+  - **VPC peering is now supported in CloudStack**.
+  - **Spectrum-X Deployment Guide v1.3 support**. Spectrum-X Deployment Guide v1.3 is now supported.
+  - **SNMPv2.** Netris can now configure SNMPv2 read-only access on supported switches
+  - **Topology View Filtering.** Topology view now supports filtering by device name.
+  - **Dell/BC-SONiC VPC peering.** VPC peering can now be established on [Dell/BC-SONiC Ethernet](/supported-platform-matrix#overlay-network-functions) fabrics.
+  - **Dell/BC-SONiC L3VPN.** L3VPN is now supported on [Dell/BC-SONiC Ethernet](/supported-platform-matrix#overlay-network-functions) fabrics.
+
+  ### Enhancements
+
+  - **XDP dataplane acceleration for SoftGate HS**.
+  - **DHCP Relay** now supports inter-VPC routing on all [Supported Switch Hardware](/supported-switch-hardware#supported-switch-hardware).
+  - **ACLs on Arista EOS** are now available on [Supported Switch Hardware](/supported-switch-hardware#supported-switch-hardware).
+  - **Topology validation** added new fields in custom JSON.
+  - **Added switch port health checks**. Switch port healt checks now include Bit Error Rate (BER) and temperature monitoring on NVUE-supported platforms.
+  - **Performance and UI improvements.**
+
+    - Add Network &gt; Links page showing all topology links.
+    - Tags are now Labels to remove confusion with VLAN tags.
+    - Added NIC stats for Generic/agentless server type derived from switch ports.
+    - Improved database scalability in larger deployments.
+    - Server Cluster UI now displays members in alphabetical order.
+    - Rename Topology Export Full to Cut Sheet.
+    - CloudStack agent automatically generates ACLs for intra-subnet communication.
+    - Improved collectd optical values export.
+    - System ASN range is now editable.
+    - Can now show more than 4 tx/rx optical signals in Optical Graph.
+    - In some CloudStack deployments enable and enforce IP forwarding property in Linux kernel.
+
+  ### Bug fixes
+
+  - Fixed backend crash after creating LB service.
+  - Fixed the inability to edit NAT rules when a VPC filter is applied.
+  - Fixed Inventory Filtering failing under certain conditions.
+  - Fixed Inventory API filtering by label, sites, types, health, and custom.
+  - Fixed filtering of ports with unknown states under certain conditions.
+  - Fixed NVUE check_signal monitor false positives on optical switch ports.
+  - Fixed ACL creation time stamp.
+  - Fixed RX values in graphs.
+  - Fixed filter reset button in ACL listing
+  - Fixed NVUE agent restarting, if the previous cycle takes too long.
+  - Fixed check_signal incorrectly identifying optical ports.
+  - Fixed signal level reporting on 8 lane optics.
+  - Fixed incorrectly displaying packet per second values for the RX lines.
+  - Fixed custom rules in inventory profile support for any port
+  - Fixed static routes applying to all switches when ApplyTo filter is used.
+  - Fixed ACLs sometimes filtering even if no filter is applied.
+  - Fixed ACL creation time stamp.
+  - Fixed installing reverse rule in NVUE when tcp-establiashed flag disabled.
+  - Fixed controller hanging when malformed create L4LB API request is received.
+  - Fixed CPU utilization graph showing incorrect data.
+  - Fixed ACL functionality when used with SNAT.
+  - Fixed SoftGate HS DNAT with Port Groups.
+  - Fixed SNAT is not working when traffic is destined to a host behind DNAT rule.
+  - Fixed NHN impacting North-South traffic when configuring East-West host networking.
+  - Fixed Topology&gt;Interface&gt;Details showing incorrect optical graph data.
+  - Fixed VPC peering with L3VPN Vnets on NVUE platforms.
+
+  **Deprecation Notices**
+
+  - Routing On Host ASN, Routing Profile
+  - VM ASN
+  - SoftGate (generic flavor)
+  - SoftGate PRO
+  - Calico ASN
+  - Built-in chat.
+  - Proxmox, Equinix metal, and PhoenixNap as supported platforms.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.5.3.html */}
+<Update label="August 27, 2025" description="Netris 4.5.3 Release Notes" tags={["4.5.3"]}>
+  ### What's new in Netris 4.5.3?
+
+  ### Features
+
+  - **DHCP Relay.** L2VPN and L3VPN V-Nets can be configured to relay DHCP requests, enabling PXE boot and external IP address assignment from non-Netris-managed DHCP servers. Operators can configure one or more upstream servers per V-Net.
+  - **E-BGP termination on V-Net.** It is now possible to establish a switch-terminated BGP peer relationship with a V-Net on a Netris-managed switch.
+  - **Spectrum-X 1.3 Reference Architecture compatible.**
+  - **Netris Host Networking plugin (NHN)** now supports ifupdown and netplan.
+  - **Controller self-monitoring.** The controller now shows the health status of each node in the controller HA cluster and each service running on the controller.
+  - **Controller Management Address** can now be explicitly specified and is correctly reflected in the “one-liner” install command.
+
+  ### Bug fixes
+
+  - Static routes are now correctly configured only on nodes matching the ApplyTo filter.
+  - API. Added MAC address parameter to API host type.
+  - Arista. Fixed configuration of secondary IP address on  V-Net gateway
+  - Arista. Normalized anycast MAC address generation
+  - Arista. Corrected configuration save behavior.
+  - Arista. Fixed missing EOS version in Inventory view.
+  - Arista. Fixed BGP configuration vanishing on reboot.
+  - Arista. Fixed missing BGP unnumbered configuration.
+  - Arista. Fixed display of summary stats.
+  - Arista. Fixed bug where collectd disappears on reboot.
+  - Arista. Fixed EOS version not displaying in inventory.
+  - Arista. Fixed bug where VLAN to VNI map was missing if BGP terminated on V-Net.
+  - Arista. Keep AAA configuration intact.
+  - Arista. Fixed VRF leaking not working properly in some cases.
+  - AutoLAG. Now only applies to V-Net member ports.
+  - SoftGate. Fixed crashing from configuring SNAT /32 with a blackhole.
+  - SoftGate. Fixed ACL bug where ACLs wouldn't install facing public connections.
+  - VPC peering. Fixed error when configuring VPC peering with the default VPC.
+  - Server Cluster. Fixed subnet creation when one already exists.
+  - Server Cluster. Fixed erroneous deletions of objects not created by the Server Cluster.
+  - DHCP Relay. Prevent deletion of VPC if used for DHCP Relay.
+  - EC-SONiC. Fixed incorrect l2vpn BGP configuration when V-Net terminates on SVI or Softgate.
+  - Graphs. Fixed incorrect display RX values.
+  - Fixed agent stuck in loop when creating/editing SNAT rules.
+  - Fixed signal level reporting for 8 lane optics.
+  - NVUE. Fixed optical graphs under interfaces showing no data.
+  - Fixed NHN plugin ifupdown and netplan support in Spectrum-X v1.2
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.4.0.html */}
+<Update label="May 15, 2025" description="Netris 4.4.0 Release Notes" tags={["4.4.0"]}>
+  ### What's new in Netris 4.4.0?
+
+  ### Features
+
+  - **CloudStack support.**
+  - **Cumulus NVUE ACL support.**
+  - **Controller HA.**
+  - **Topology Validation.** Compare actual topology with designed topology in the controller and surface errors when mismatches are identified.
+  - **Global Routing.** Support native VPC subnet reachability from outside of the Netris-managed fabric.
+  - **Export Topology to CSV.** Topology information can be exported to NetQ `.dot` format and CSV format for labeling and patching cables.
+  - **Hypervisor Integrated Fabric.**
+  - **Optical Monitoring.** Light levels are now monitored.
+  - **EVPN-MH on Dell-SONiC.**
+  - **Add support for object labels.**
+  - **Add interfaces to V-Nets based on labels.**
+  - **Softgate PRO support.**
+  - **ACLs are now VPC aware.**
+  - **Netris controller can now be installed in an air-gapped environment.**
+  - **QoS for RoCE on EC-SONiC.**
+  - **EC-SONiC support.**
+  - **Ubuntu 24.04 support.**
+  - **Arista support.**
+
+  ### Enhancements
+
+  - **CloudStack agent details.** Netris reports meta information about the Netris agent running on a CloudStack host.
+  - **CloudStack agent IPv6 SLAAC.** Adds support for IPv6 SLAAC.
+  - **CloudStack telemetry.** Adds agent telemetry view in **Network → Inventory**.
+  - **Spectrum-X improvements.** Support RoCE, Adaptive Routing, ASIC Monitoring, BGP graceful restart.
+  - **EC-SONiC support improvements.** Support QoS for RoCE, Adaptive Routing, L3VPN, VLAN-aware V-Net.
+  - **Dell-SONiC Topology Validation.**
+  - **Scale support for over 1000 VPCs and over 1000 DNAT rules.** Netris can now manage over 1000 V-Nets and over 1000 DNAT rules.
+  - **Underlay link type toggle and IP address change in Terraform on existing links.** When using Terraform, links can now be set to Underlay and back, and IP addresses can be changed without deleting and recreating links. Terraform will use the Update function.
+  - **Softgate HS supports Mellanox ConnectX NICs.** Softgate HS can now be installed on servers with Mellanox ConnectX network cards.
+  - **Optimize BGP overlay for Hypervisor Integrated Fabric.**
+  - **Improve Softgate PRO scalability.**
+  - **Load Balancer is VPC aware, supports IPv6, and is horizontally scalable.**
+  - **Improved breakout support.** 1x800G / 2x400G / 1x400G / 4x200G / 2x200G / 1x200G / 8x100G / 4x100G / 2x100G / 1x100G / 8x50G / 4x50G / 2x50G / 1x50G / 2x40G / 1x40G / 8x25G / 4x25G / 2x25G / 1x25G / 8x10G / 4x10G / 2x10G / 1x10G.
+  - **Improved interface stats aggregation.** Controller now shows bps, pps, and errors for aggregated interfaces based on data from member ports.
+  - **Collect VNI bps/pps stats for Softgate HS BGP peers.**
+  - **REST API changes.**
+  - **Dell-SONiC is now supported in CloudSim.**
+  - **Network links can be edited.**
+  - **Softgate HS Maintenance Mode.**
+
+  <Note>
+    Some features are limited to specific platforms, as described in the [Netris supported functionality and platforms matrix](/supported-platform-matrix).
+  </Note>
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.3.0.html */}
+<Update label="July 31, 2024" description="Netris 4.3.0 Release Notes" tags={["4.3.0"]}>
+  ### What's new in Netris 4.3.0?
+
+  ### Features
+
+  - **Nvidia Spectrum-X**. Multi-tenant network automation, switch-fabric management, and cloud networking abstraction for Nvidia Spectrum-X AI/GPU cluster networks.
+  - **Init workflow** (terraform module) for rail-optimized AI/GPU cluster network topologies.
+  - **Netris2air**. Nvidia Air network simulation plugin that reads the inventory, IPAM, and topology data from Netris controller and creates a simulation (digital twin) of your network in Nvidia Air. Used to simulate fully functional networks before applying on the physical hardware.
+  - **Parallel Fabrics**. This functionality allows for managing multiple physically separate switch fabrics logically defined in one Netris controller. A common example would be the East-West fabric for the RDMA compute network, the North-South fabric (or TAN—Tenant Access Network), and the Out-of-Band management (OOB) network.
+  - **Topology validation**: Validate the actual wiring in comparison to wiring data defined in Netris Topology manager, detect and alarm wiring errors.
+  - **Server Cluster (profiling)**. Create VPC, V-Net(VXLAN+Subnet), and other network services by providing a list of servers that should participate in the cluster. Create VRFs, VPCs, VXLANs by server endpoints, not switch ports.
+  - **AI/GPU network optimization** services such as QoS for RoCE, RoCE Adaptive Routing, and RoCE Congestion Control.
+  - **NHN Plugin** (Netris Host Networking Plugin) – AI/GPU host networking services for zero-touch configuration of IP addresses, static routes, SuperNIC firmware installation, and AI/GPU networking optimizations enablement on SuperNIC
+  - **Cumulus Linux version 5.9.1** is now supported by the new NVUE Netris agent.
+
+  ### Bug fixes
+
+  - **Netris Scalability** has been validated for up to 32000 active network links.
+  - **BGP Numbered/UnNumbered**. The BGP underlay network now supports numbered BGP in addition to previously supported unnumbered.
+  - **L3VPN VXLAN:** Netris V-Nets now support L3VPN VXLANs in addition to L2VPN.
+  - **Performance improvements** to Netris controller.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.2.0.html */}
+<Update label="May 1, 2024" description="Netris 4.2.0 Release Notes" tags={["4.2.0"]}>
+  ### What's new in Netris 4.2.0?
+
+  ### Features
+
+  - Switches with Dell SONiC operating system are now supported. Full list of supported functionality is available here.
+  - Vmware vSphere plugin for automatically provisioning VXLANs, VLANs on the switch fabric in order to accommodate transport of Vmware vSphere defined virtual networks across the physical switch fabric.
+
+  ### Bug fixes
+
+  - Previously problematic BGP peering over a V-Net in Equinix Metal and PhoenixNAP environments has been fixed.
+  - Various improvements to Controller performance.
+  - Minor improvements to Role-Based Access Control.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.1.1.html */}
+<Update label="January 31, 2024" description="Netris 4.1.1 Release Notes" tags={["4.1.1"]}>
+  ### What's new in Netris 4.1.1?
+
+  ### Features
+
+  1. Custom Local ASN for E-BGP peers:
+
+     The Local ASN for E-BGP peers can now be either of Site Public ASN (default), Switch Local ASN, or Custom.
+  2. Increased Inbound Max Prefix for BGP Peers terminated on a switch:
+
+     The “Prefix Inbound Max” for switch-terminated E-BGP peers can be any number up to 10,000(default) prefixes.
+  3. Tech-Support data collection:
+
+     The Netris-tech-support data collection script is now also available for the Netris controller, to facilitate support processing.
+  4. New location (Metro) of Equinix Metal:
+
+  Netris now includes the new location (Metro) of Equinix Metal: Mumbai.
+
+  ### Bug fixes
+
+  - In Equinix Metal, using tags to assign newly created servers to V-Net would previously cause the Layer-2 network provisioning to fail.
+  - In Equinix Metal, adding a server to an existing V-Net while server provisioning is still in process would previously cause the Layer-2 network provisioning to fail.
+  - The Web UI filter in the “Details” column of the E-BGP section was not working correctly with the “switch port” and “router” attributes.
+  - The “last minute” in E-BGP peer bandwidth graphs was showing wrong data.
+  - Bulk action was not working for LACP parameters of aggregate interfaces.
+  - Search was not working in graph add/edit dialogue in Graph Boards.
+  - The Monitoring notifications were missing for E-BGP peers terminated on a switch.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.0.0.html */}
+<Update label="July 25, 2023" description="Netris 4.0.0 Release Notes" tags={["4.0.0"]}>
+  ### What's new in Netris 4.0.0?
+
+  ### Features
+
+  ****Multi-VPC & Multi-VRF support****
+
+    - Netris 4.0.0 enables the configuration of multiple isolated VPCs within the same hardware. Each Netris VPC runs an isolated virtual routing and forwarding table (VRF) with BGP, static routing, and looking glass (centralized routing table lookup) support. Netris VPCs also provide isolated IPAM and V-Net (Layer2 with default gateway).
+    - Netris SoftGate provided services: Load Balancer, NAT, Border Router, and SiteMesh are currently limited to a single, default VPC and will support multiple VPCs in the next release.
+
+  ****EVPN/VXLAN Multi-homing****
+
+    - Automatic Multi-Homed LAG with LACP is designed to provide easy and automatic physical network link redundancy for servers. There is no need for the network and systems engineers to negotiate the LAG and LACP settings manually anymore. Netris-managed switch-fabric now monitors LACP messages coming from servers and, by leveraging powerful EVPN/VXLAN capabilities of modern switches, will automatically make appropriate pairs of switch ports form a Link Aggregation with active/active or active/standby (depending on which the switch vendor supports mode) configurations.
+    - Manual Multi-Homed LAG – while Automatic LAG is easy and convenient, there may be some special cases when the user needs to create a defined LAG/AGG interface and specify which switch ports exactly can and should be in the same LAG and with LACP on/off mode. This functionality is also based on EVPN/VXLAN multihoming. Hence you can configure MH-LAG across any switches, no matter if two switches are linked directly or transiting a spine switch.
+
+  ### Bug fixes
+
+  - The virtual MAC address generation algorithm is changed to provide a randomness factor between Netris controllers. Previously if two separate Netris deployments were connected physically could potentially experience a MAC address conflict if two interconnected services happened to get the same VXLAN id.
+  - Switch OS version in the inventory listing. Previously it was not showing the correct version for all switches.
+  - BFD failure caused by using inventory profiles bug is fixed. Previously, when applying an inventory profile to a given SoftGate node, BFD would fail, and BGP redundancy would fall back to standard BGP timer-based.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.5.0.html */}
+<Update label="October 24, 2023" description="Netris 3.5.0 Release Notes" tags={["3.5.0"]}>
+  ### What's new in Netris 3.5.0?
+
+  ### Features
+
+  1. ACL Port Groups in NAT section:
+
+     Now, it’s possible to create a DNAT rule with multiple ports using “ACL Port Groups.”
+  2. NAT in Masquerade mode follows the default gateway on SoftGate:
+
+     When using NAT in Masquerade mode, the specified private IP subnets will share SoftGate node’s Internet connection, including Internet connection through management interface, or any physical or logical interface of SoftGate. Most commonly used for situations when a public IP subnet for SNAT is not available.
+  3. Static IP/GW configuration through PhoenixNAP portal:
+
+     When deploying a server in the PhoenixNAP with a static IP and default gateway and selecting Netris V-Net as a private network, Netris will automatically include the new server into the V-Net. Commonly used when IaC (Infrastructure as Code) is used for deployment or when server IP configuration is desired to be configured statically through PhoenixNAP portal instead of DHCP.
+  4. New locations (Metros) of Equinix Metal:
+
+     he following locations (Metros) of Equinix Metal are added in Netris:
+
+     - Montreal
+     - Helsinki
+     - Stockholm
+     - Melbourne
+     - Osaka
+     - Manchester
+  5. Improved Netris Controller API Performance:
+
+     Optimized API operations for faster and more efficient interactions, contributing to overall system responsiveness.
+  6. Site-Mesh (site-to-site VPN) failover time improvement:
+
+     Timers for the BGP session over “Site Mesh” have been adjusted for faster service recovery in case of a SoftGate failure.
+
+  ### Bug fixes
+
+  - Previously creation of a public (External) ACL required approval even if the user had a “permit all” or write access to a permission group with “​​External ACL.”
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.4.4.html */}
+<Update label="September 29, 2023" description="Netris 3.4.4 Release Notes" tags={["3.4.4"]}>
+  ### What's new in Netris 3.4.4?
+
+  ### Features
+
+  1. IPv6 Support for “Site Mesh” Service:
+
+     The “Site Mesh” (site-to-site VPN) service now fully supports IPv6.
+  2. Customizable “Default private-network” in PhoenixNAP:
+
+     Now, it is possible to change the “default private-network” in PhoenixNAP deployment.
+  3. VLAN Support for E-BGP Service in PhoenixNAP:
+
+     Our E-BGP service in PhoenixNAP deployments now includes VLAN support.
+  4. Optional “Management” IP Address for SoftGate Nodes:
+
+     SoftGate nodes deployed in PhoenixNAP, AWS, and GCP environments no longer require a “Management” IP address, simplifying deployment options.
+  5. Public IP Addresses for Upstream BGP Sessions in Equinix Metal:
+
+     In Equinix Metal deployments, upstream BGP sessions now utilize public IP addresses instead of private link-locals, aligning with Equinix’s requirements.
+
+  ### Bug fixes
+
+  - Impossible to utilize the unmanaged V-net functionality with the same VLAN ID across multiple sites in PhoenixNAP and Equinix Metal deployments.
+  - The IPv6 Access Control List (ACL) did not accept “::/0” as a valid source value.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.4.3.html */}
+<Update label="November 9, 2023" description="Netris 3.4.3 Release Notes" tags={["3.4.3"]}>
+  ### What's new in Netris 3.4.3?
+
+  ### Bug fixes
+
+  - This update addresses the issue in the Netris controller where DHCP lease records were not being updated for servers that had been redeployed or renamed.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.4.0.html */}
+<Update label="March 6, 2023" description="Netris 3.4.0 Release Notes" tags={["3.4.0"]}>
+  ### What's new in Netris 3.4.0?
+
+  ### New Platform Integration
+
+  **PhoenixNAP Bare Metal Cloud – Netris VPC is now natively supported on PhoenixNAP bare metal platform.**
+
+  - PhoenixNAP IP address space automatically loads up into Netris IPAM
+  - PhoenixNAP BMC servers become available endpoints for Netris V-Nets
+  - All Netris VPC functionality is available on the PhoenixNAP platform.
+  - Learn more about [Netris VPC for PhoenixNAP solution](https://www.netris.io/phoenix-nap/)
+  - Read the documentation for [Netris VPC at PhoenixNAP](https://www.netris.io/docs/en/stable/tutorials/netris-vpc-for-phoenixnap-bmc.html)
+
+  <Frame>
+    <img src="/images/netris-phoenix-nap-solution-768x388.png" alt="netris phoenix nap solution 768x388" />
+  </Frame>
+
+  <br />
+
+  ### Features
+
+  ****SoftGate maintenance mode****
+
+    Maintenance mode for SoftGate nodes can be enabled through editing each SoftGate node under Net→Inventory. When SoftGate is set for maintenance mode Netris agent will try to offload the traffic on another node so you can safely perform maintenance on deactivated SoftGate.
+
+  ****Multi-interface SoftGate (experimental)****
+
+    This feature allows you to instruct SoftGate to bind each V-Net to a specified interface (instead of bond0.`<vlanid>`) by using V-Net tags (int=”eth7”). This feature is only available for VPC Anywhere (switch fabric = dot1q Trunk). The anticipated use case is to use Netris SoftGate as a virtual machine to perform as a gateway for the VMware cluster (instead of using VMware NSX) Read the documentation for this feature.
+
+  ****Host reservation with type sys****
+
+    Netris API (RestAPI only) allows reserving hosts in the IPAM. The anticipated use case is to be able to reserve some IP addresses that are being statically used by any systems so Netris doesn’t assume they are free for DHCP and Load Balancer use.
+
+  ### Bug fixes
+
+  - DNAT rule previously was blocking private networks from other V-Nets from accessing the private host behind the DNAT rule.
+  - SoftGate failover was slow with the full routing table.
+  - SoftGate PRO boot-up may, under some circumstances, lead to 30 seconds service interruption.
+  - Physical site-to-site link has been prioritized over the SiteMesh VPN tunnel.
+  - Traffic originated in one site and destined to a public IP (LB-VIP or DNAT global IP address) was traveling through SiteMesh and being dropped. A fix is provided to always route such traffic over the Public Internet, bypassing SiteMesh.
+  - FRR service failure was not leading to traffic switchover causing packet drops. A fix is provided where Netris monitors FRR service liveness and will switch over traffic to another SoftGate node in case of an FRR service crash. A monitoring alarm was and is available for such FRR failure.
+  - DHCP service may fail (Kea process crash) in a situation when multiple DHCP requests with the same MAC address but different IDs are received. A Fix has been provided to (1) provide the same IP address per MAC address and (2) avoid Kea service crash.
+  - Netris-tech-support troubleshooting data collector now also collects DHCP service data.
+  - Previously, changing the DHCP IP address range for the already deployed V-NET was impossible.
+  - BFD service was not enabled automatically. A fix has been provided to ensure that BFD service is enabled for FRR for each SoftGate node.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.3.0.html */}
+<Update label="December 5, 2022" description="Netris 3.3.0 Release Notes" tags={["3.3.0"]}>
+  ### What's new in Netris 3.3.0?
+
+  ### Features
+
+  ****V-Net tags.****
+
+    Equinix Metal users can now optionally use tags for associating servers with Netris V-Net service. This comes handy, especially for Infrastructure as Code (IaC) situations, to request servers and network resources in a single iteration.
+
+  ****Create V-Net based on existing unmanaged Layer-2 services in Bare Metal Cloud environments.****
+
+    Layer-2 services that exist in a bare metal cloud environment but are not yet part of any service that is managed by Netris will show up under the V-Nets section marked as Unmanaged. Users can use the “Manage” function to easily create a new V-Net service that will automatically apply the VLAN id and the list of servers associated with.
+
+  ### Bug fixes
+
+  **Multiple fixes to improve SoftGate nodes failover mechanisms to address high availability (HA) issues under specific circumstances.**
+
+  - SoftGate nodes now have a local data store for caching controller data to better handle situations when a SoftGate node is being booted or re-booted during headless operations when Netris controller is unreachable.
+  - Access Control Lists (ACL) are applied symmetrically (where possible), so any SoftGate node is ready to permit/deny traffic in the event of a failover. Previously it required two cycles of Netris agent execution to populate ACLs after a failover event.
+  - Disabled preemption. For services that require active/standby operation (default gateway, SNAT) the last active SoftGate will remain active until the next failover.
+  - Fixed DHCP service failover. Previously KEA DHCP server daemon was failing on standby SoftGate node + in case of headless failover Netris agent was failing to auto-generate the right configs for KEA. Both issues are resolved.
+  - Improved NAT service failover when using BGP to advertise public IP address space. Previously NAT failover could take up to 10 seconds randomly.
+  - Improved failover of static routes defined through Netris. Previously failover of static route entries was taking up to 20 seconds.
+
+  ### Various improvements and bug fixes
+
+  - Users with switches running Cumulus NOS can now create security rules in inventory profiles also with any protocol, previously due to a software bug it was limited to tcp/udp only.
+  - More efficient auto-generation of ACL rules that are using port-ranges for SoftGate and SoftGate PRO.
+  - Access Control Lists (ACLs) with established=on are now using individual (per flow) “permit reversed established” rules for SoftGate nodes. While we keep using a general (for all flows) “permit anything established” for Switches to preserve TCAM.
+  - API logging is fixed.
+  - DHCP server service is now also supported for switches running Cumulus NOS.
+  - Support both bonded Layer-2 and Hybrid bonded interfaces in Equinix Metal. Previously switching server interface type to Layer-2 was causing issues.
+  - Netris agent managing Bare Metal Cloud environment now writes logs into Netris Controllers available under API logs section.
+  - Custom DHCP option sets can be attached to multiple V-Nets, previously due to a software bug it was limited to a single V-Net.
+  - NTP servers with FQDN are now supported in Inventory Profiles.
+  - L4LB used with multiple Kubernetes Clusters now can control which Kubernetes Cluster to be served through which load-balancer pool.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.2.1.html */}
+<Update label="October 5, 2022" description="Netris 3.2.1 Release Notes" tags={["3.2.1"]}>
+  ### What's new in Netris 3.2.1?
+
+  This minor release of Netris is focused on delivering a few critical fixes.
+
+  Learn more about the [Netris VPC Anywhere solution](https://www.netris.ai/vpc-anywhere/?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.18.1764700610911&__hsfp=2559645072) or get started with the [Netris VPC Anywhere tutorial](https://www.netris.ai/docs/en/stable/tutorials/vpc-anywhere.html?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.18.1764700610911&__hsfp=2559645072).
+
+  ### Bug fixes
+
+  - Fixed the custom BGP VLAN provisioning bug that was requiring Equinix Metal users to create Layer-2 plumbing underneath manually.
+  - Fixed Equinix Metal netris-agent bug that was causing netris-agent stuck in case of any failed API call.
+  - Fixed IPv6 BGP default gateway issue that was previously leading to SoftGate switchover failure for IPv6 traffic.
+  - Fixed BGP large community issue previously causing limitations for large BGP communities in advanced configuration mode.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.2.0.html */}
+<Update label="September 22, 2022" description="Netris 3.2.0 Release Notes" tags={["3.2.0"]}>
+  One thing missing beyond the public cloud is the self-service VPC Networking of the public cloud. Your Elastic load balancers, self-service network firewall, self-service NAT and DHCP, and self-service site-to-site VPN.
+
+  With Netris 3.2.0, we bring the VPC-Networking Anywhere concept to your existing brownfield enterprise network, existing colo network, and edge network.
+
+  The key is that Netris can now operate on top of any physical network, including your existing one, enabling Network Engineers to provide the InfraOps, and DevOps engineers the cloud-like experience they need.
+
+  Learn more about the [Netris VPC Anywhere solution](https://www.netris.ai/vpc-anywhere/?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.18.1764700610911&__hsfp=2559645072) or get started with the [Netris VPC Anywhere tutorial](https://www.netris.ai/docs/en/stable/tutorials/vpc-anywhere.html?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.18.1764700610911&__hsfp=2559645072).
+
+  <Frame>
+    <img src="/images/VPC-anywhere-page.png" alt="VPC anywhere page" />
+  </Frame>
+
+  <br />
+
+  ### What's new in Netris 3.2.0?
+
+  ### Features
+
+  - Netris VPC functionality is now available on top of any physical network with 802.1q VLAN support. Netris SoftGate or SoftGate PRO nodes connect to any 3rd party switch network and automatically use various VLAN tags (from the allowed range) to isolate various traffic flows. All Netris VPC services such as Elastic Load Balancer, V-Net, NAT, Firewall, and Site Mesh are available.
+  - In addition to default gateway functionality, now V-Net also provides DHCP service. DHCP service is based on using [Kea](https://www.isc.org/kea/), which installs and configures automatically through the Netris agent.
+  - IPAM and V-Net now feature a listing of IP/MAC addresses information for hosts using DHCP.
+  - BGP hello and hold timers default values can be edited under the advanced section of every BGP entry.
+  - BGP now supports BFD, it’s enabled by default and can be disabled from the advanced section.
+
+  ### Bug fixes
+
+  - Resource reservation issue that may cause VLAN id conflict under certain circumstances in Equinix Metal.
+  - Fixed the issue of the default inventory profile previously not being attached to default SoftGate nodes.
+  - Fixed the issue that previously was preventing custom prefix lists attached to system-generated BGP sessions. (Used in advanced migration scenario.)
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.1.0.html */}
+<Update label="August 1, 2022" description="Netris 3.1.0 Release Notes" tags={["3.1.0"]}>
+  Kubernetes was born in the public cloud, and made its way everywhere. S3 storage was born in the public cloud and made its way everywhere. The 3rd thing that is missing beyond the public cloud is the self-service VPC Networking of the public cloud.
+
+  With Netris 3.1.0 we start bringing VPC Networking to anywhere. We start delivering on this important mission with our partner Equinix. Today we bring VPC Networking to Equinix Metal.
+
+  Learn more on the [Netris website](https://www.netris.ai/equinix/?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.20.1764700610911&__hsfp=2559645072) or read more on the [Equinix website](https://metal.equinix.com/ecosystem/partners/netris/).
+
+  <Frame>
+    <img src="/images/equnix-metal.png" alt="equnix metal" />
+  </Frame>
+
+  <br />
+
+  ### What's new in Netris 3.1.0?
+
+  ### Features
+
+  - Native integration of Equinix Metal API with Netris controller.
+  - Automatic BGP upstream configuration & provisioning based on BGP service metadata in the Equinix Metal project.
+  - Automatic Elastic IP address advertisement based on available elastic IP address subnets in Equinix Metal project.
+  - Automatic IPAM, pulls in elastic IP address subnet information from Equinix Metal metadata.
+  - Elastic Load Balancer with Native Kubernetes support for Equinix Metal.
+  - V-Net (virtualized, isolated networks) support for Equinix Metal with automatic configuration of Layer-2 networking of the Equinix Metal project.
+  - Firewall to filter traffic between V-Nets and to/from the public Internet for Equinix Metal.
+  - Network Address Translation (NAT) for Equinix Metal project.
+  - Site-Mesh, an automatic site-to-site VPN based on Wireguard and FRR for the Equinix Metal project.
+
+  ### Bug fixes
+
+  - Agent installer one-liner now installs the right version of agent that is the most recommended for given version of Netris controller.
+  - Improved default BGP timers to fix prior issues of occasional BGP session flapping under high load conditions.
+  - Previously broken “Save positions” function of the topology view is fixed.
+  - Resolved frontend caching issues.
+  - Resolved wrong IPAM nested subnets visualization issue.
+  - SoftGate PRO now supports ACL firewalling too.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/3.0.0.html */}
+<Update label="October 6, 2021" description="Netris 3.0.0 Release Notes" tags={["3.0.0"]}>
+  ### What's new in Netris 3.0.0?
+
+  We are thrilled to announce the 3.0 version of Netris, the Automatic NetOps. Netris automatically generates assured configurations for open-networking switches running Linux and FRR, as well as leverages the power of DPDK, Wireguard, and other open-source software to enable production-grade routing, server load balancing, NAT, and site-to-site VPN services running on a commodity Linux server. Netris safely and automatically operates your on-prem physical network with a cloud-like user experience.
+
+  **Kubernetes Integration**
+
+  Kubernetes relies on networking services that public cloud environments provide seamlessly behind the scenes. Netris 3.0 does the same for on-prem network environments.
+
+  Now Netris seamlessly integrates with Kubernetes and by listening to Kube API events, Netris dynamically generates network configurations for open-networking switches and for hardware offloaded linux-based gateways to deliver end to end network services in concert with your Kubernetes cluster. ([Check out our solution brief](https://www.netris.ai/kubernetes-solution-brief/?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.22.1764700610911&__hsfp=2559645072))
+
+  In addition to an intuitive GUI and RestAPI, Netris 3.0 controller allows you to use Kubernetes CRDs to manage your self-operating network just like you manage your public cloud deployment.
+
+  **Free Softgate Option**
+
+  While Netris typically operates with SmartNIC powered Linux gateways (100Gbps) and open-networking switches(1-400Gbps / port), in Netris 3.0 we are releasing a free version of our SoftGate that delivers 100% of the network functionality purely in software to be used for small scale applications such as automatic cloud-like network for your home/office Kubernetes cluster, or for your lab. This free and lightweight version is only limited to your CPU resources, but it is as robust and stable as the premium version so it can be even used in small production networks that require few Gbps of traffic forwarding. ([check out our data sheet](https://www.netris.ai/data-sheet/?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.22.1764700610911&__hsfp=2559645072)).
+
+  **Calico Integration**
+
+  Many customers are currently deploying Calico from Tigera for a feature-rich CNI within their Kubernetes infrastructure.  Calico requires BGP route advertisements for reachability between nodes in a cluster.  The default design uses a BGP full-mesh for k8s nodes, but this requires additional resources to manage the BGP routing tables.  For large clusters and high performance network designs, Tigera now recommends that nodes should directly peer with their local network routers and offload the neighbor relationship and route advertising to fabric switches.  Switching the network design from the default mode to support this recommendation is complicated and requires a lot of static device configuration.
+
+  With Netris, making this change is as simple as applying a single line annotation via kubectl.  This change causes Netris to automatically set up the necessary routing configurations on all of the fabric switches before switching the Calico operating mode.  This easy transformation of the network design is free from user error and is completed in a few minutes.
+
+  In addition, Netris continuously monitors Kubernetes events and the Calico control plane.  This ensures that the creation or modification of a node or cluster causes automatic updates on the physical network.
+
+  **Try Netris 3.0 Now**
+
+  Netris 3.0 offers major additional functionality needed for fully automatic data center operations.  These enhancements continue to simplify the lives of network operators and reduce the risk of misconfigurations and outages.  Netris 3.0 is available for free evaluations as well as production use. [Get started with Netris 3.0 for free](https://www.netris.ai/try/?__hstc=81789449.9f93fa53f90e96795adffdeca70f369a.1764700610911.1764700610911.1764700610911.1&__hssc=81789449.22.1764700610911&__hsfp=2559645072).
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/2.9.0.html */}
+<Update label="March 5, 2021" description="Netris 2.9.0 Release Notes" tags={["2.9.0"]}>
+  ### What's new in Netris 2.9.0?
+
+  - Native **Kubernetes** Networking and Load-Balancing
+  - **100Gbps** performance upgrade for SoftGate Linux border router
+  - Automatic on-demand **L4 Load-Balancer**
+  - Automatic site-to-site interconnect through **SiteMesh**
+
+  Read the release notes below, or check out our documentation for detailed info.
+
+  - **Kubenet** – a network service purpose-built for Kubernetes cluster nodes. Kubenet integrates with Kube API to provide an on-demand load balancer and other Kubernetes-specific networking features. Netris Kubenet is designed to complement Kubernetes CNI networking with modern physical networking.
+  - **DPDK data plane support for SoftGate nodes** – Provides higher performance for Linux-based Internet gateway (SoftGate). Up to 27Mpps/100Gbps for L3 routing, 12Mpps with NAT rules on.
+  - **L4 Load Balancer** – In addition to switch-based Anycast Load Balancer, we now support a SoftGate/DPDK-based L4 Load Balancer. L4LB integrates with Kubernetes providing cloud-like on-demand load balancer service (type: load-balancer) in your local data center.
+  - **SiteMesh** – a Netris service for automatically configuring site-to-site interconnect over the public Internet. SiteMesh supports configuration for WireGuard to create encrypted tunnels between participating sites and automatically generates configuration for FRR to run dynamic routing. In a few clicks, services in one site get connectivity to services in other sites over a mesh of WireGuard tunnels.
+  - **API logs** – Comprehensive logging of all API calls sent to Netris Controller with the ability to search by various attributes, sort by any column, and filter by method type.
+  - **Ubuntu/SwitchDev** updates – Removed the requirement for a hairpin loop cable. Removed the need for IP address reservation for V-NET, full support of anycast default gateway.
+  - **Controller distributions** – Netris controller, is now available in three deployment forms. 1) On-prem KVM virtual machine. 2) Kubernetes application. 3) Managed/Hosted in the cloud.
+  - **Inventory Profiles** – A construct for defining access security, timezone, DNS, NTP settings profiles for network switches and SoftGate nodes.
+  - **Switch/SoftGate agent** – New installer with easy initial config tool. Support for IP and FQDN as a controller address. Authentication key.
+  - **GUI** – Improved Net→Topology section, now the main place for declaring the network topology. All sections got a column organizer, so every user can order and hide/show columns to their comfort.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
+{/* source: https://www.netris.io/docs/en/latest/release-notes/2.8.0.html */}
+<Update label="May 13, 2020" description="Netris 2.8.0 Release Notes" tags={["2.8.0"]}>
+  ### What's new in Netris 2.8.0?
+
+  ### Features
+
+  - Updated GRPC based agent/controller API with encrypted data exchange.
+  - We have rebuilt ground up our configuration parser library.
+  - Cumulus, SwitchDev, SW-router agents refactored from scratch using GoLang, new GRPC API, and new parser library.
+  - Northbound BGP, external BGP templates are entirely updated.
+  - New Object-oriented E-BGP control policies. We now include objects: Route-maps, communities, as-path, prefix-lists.
+  - VLAN aware bridge mode for V-NET(formerly known as a circuit). VLAN aware mode can be used simultaneously with a standard mode on the SwitchDev platform, but NOT on the Cumulus platform.
+  - LAG support for the hairpin link. Removal of the hairpin requirement for SwitchDev platform.
+  - Support of SwitchDev platform in both leaf and spine switch roles. Using the SVI interface, so no need for a hairpin anymore.
+  - Improved frontend with better UX, now represented as a SPA (Single Page Application)
+  - Improvements to the visibility system include automatic monitoring of critical system services and processes for Cumulus, SwitchDev, and NFV platforms.
+  - Improved performance for the anycast Load Balancing checks, these are now written in GoLang.
+  - API documentation included in the GUI.
+
+  ### Bug fixes
+
+  - E-BGP peer migration between termination points was causing problems.
+  - Anycast Load balancer health checks were causing performance issues when applying multiple health checks on the single switch.
+  - Problems with permissions to assign IP address to an ROH instance for LDAP authorized users.
+  - Misconfiguration caused by unstable connectivity between agent and controller.
+  - Link visualization issues in the topology view.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>

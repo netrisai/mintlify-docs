@@ -1,0 +1,361 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "luma",
+  "name": "Netris Documentation",
+  "colors": {
+    "primary": "#01358d",
+    "light": "#609fff"
+  },
+  "appearance": {
+    "default": "light"
+  },
+  "fonts": {
+    "family": "Montserrat"
+  },
+  "logo": {
+    "light": "/logo/netris-light.png",
+    "dark": "/logo/netris-dark.png",
+    "href": "https://www.netris.io"
+  },
+  "favicon": "/favicon.png",
+  "navbar": {
+    "primary": {
+      "type": "button",
+      "label": "Join Slack",
+      "href": "https://netris.slack.com/"
+    }
+  },
+  "navigation": {
+    "tabs": [
+      {
+        "tab": "Overview",
+        "groups": [
+          {
+            "group": "Get Started",
+            "pages": [
+              "introduction",
+              "definitions",
+              "netris-architecture"
+            ]
+          },
+          {
+            "group": "Try & Learn",
+            "pages": [
+              "try-learn/nvidia-spectrum-x-scenario",
+              "try-learn/onprem-k8s"
+            ]
+          },
+          {
+            "group": "Plan Your Deployment",
+            "pages": [
+              "supported-platform-matrix",
+              "supported-switch-hardware",
+              "vpc-gateways-with-managed-fabric"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Deploy",
+        "groups": [
+          {
+            "group": "Controller",
+            "pages": [
+              "installation/installation",
+              "installation/controller-k3s-air-gap-ha",
+              "installation/controller-k8s-installation",
+              "installation/ztp"
+            ]
+          },
+          {
+            "group": "Network Switches",
+            "pages": [
+              "switch-agent-installation",
+              "nvidia-cumulus-v5.9-plus-switch-initial-setup",
+              "nvidia-cumulus-v5-switch-initial-setup",
+              "nvidia-cumulus-v3.7-switch-initial-setup",
+              "edgecore-sonic-switch-initial-setup",
+              "dell-sonic-switch-initial-setup",
+              "ubuntu-switchdev-switch-initial-setup"
+            ]
+          },
+          {
+            "group": "Edge & Host Networking",
+            "pages": [
+              "netris-softgate-hs",
+              "ai-netris-host-networking",
+              "bluefield-3-dpu-installation"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Operate",
+        "groups": [
+          {
+            "group": "Fabric Management",
+            "pages": [
+              "general-settings",
+              "site",
+              "vpc",
+              "topology-management",
+              "inventory-profile",
+              "ipam",
+              "bgp",
+              "network-interfaces",
+              "lag",
+              "maintenance-mode",
+              "static-routing"
+            ]
+          },
+          {
+            "group": "Network Services",
+            "pages": [
+              {
+                "group": "V-Net",
+                "pages": [
+                  "vnet",
+                  "dhcp-and-dhcp-relay",
+                  "link-aggregation-and-multihoming"
+                ]
+              },
+              "server-cluster",
+              "nat",
+              "l4-load-balancer",
+              "vpc-peering",
+              "vpc-connect",
+              "acls"
+            ]
+          },
+          {
+            "group": "Monitoring & Observability",
+            "pages": [
+              "monitoring-observability/visibility",
+              "monitoring-observability/topology-validation",
+              "monitoring-observability/netq",
+              "monitoring-observability/healthchecks",
+              "monitoring-observability/looking-glass"
+            ]
+          },
+          {
+            "group": "Administration",
+            "pages": [
+              "accounts",
+              "custom-configuration-snippets",
+              "labels",
+              "release-notes"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Integrate",
+        "groups": [
+          {
+            "group": "NVIDIA Networking",
+            "pages": [
+              "netris-ufm-integration",
+              "netris-nvlink-integration",
+              "evpn-on-host",
+              "bluefield-3-dpus"
+            ]
+          },
+          {
+            "group": "Kubernetes",
+            "pages": [
+              "kubernetes-integration"
+            ]
+          },
+          {
+            "group": "Apache CloudStack",
+            "pages": [
+              "cloudstack/netris-cloudstack",
+              "cloudstack/netris-cloudstack_p1",
+              "cloudstack/netris-cloudstack_p2",
+              "cloudstack/netris-cloudstack_p3",
+              "cloudstack/netris-cloudstack_p4",
+              "cloudstack/netris-cloudstack_p5"
+            ]
+          },
+          {
+            "group": "Terraform",
+            "pages": [
+              "terraform-integration"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "seo": {
+    "metatags": {
+      "robots": "noindex"
+    }
+  },
+  "contextual": {
+    "options": [
+      "copy",
+      "view",
+      "assistant",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "grok",
+      "aistudio",
+      "devin",
+      "windsurf",
+      "mcp",
+      "add-mcp",
+      "cursor",
+      "vscode",
+      "devin-mcp"
+    ]
+  },
+  "redirects": [
+    {
+      "source": "/release-notes/4.16.0",
+      "destination": "/release-notes#september-2-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.15.0",
+      "destination": "/release-notes#august-18-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.14.0",
+      "destination": "/release-notes#july-31-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.13.0",
+      "destination": "/release-notes#july-15-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.12.0",
+      "destination": "/release-notes#july-2-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.11.0",
+      "destination": "/release-notes#june-15-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.10.0",
+      "destination": "/release-notes#may-19-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.9.0",
+      "destination": "/release-notes#april-30-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.8.0",
+      "destination": "/release-notes#april-15-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.7.0",
+      "destination": "/release-notes#march-11-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.6.1",
+      "destination": "/release-notes#february-27-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.6.0",
+      "destination": "/release-notes#february-10-2026",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.5.3",
+      "destination": "/release-notes#august-27-2025",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.4.0",
+      "destination": "/release-notes#may-15-2025",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.3.0",
+      "destination": "/release-notes#july-31-2024",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.2.0",
+      "destination": "/release-notes#may-1-2024",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.1.1",
+      "destination": "/release-notes#january-31-2024",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/4.0.0",
+      "destination": "/release-notes#july-25-2023",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.5.0",
+      "destination": "/release-notes#october-24-2023",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.4.4",
+      "destination": "/release-notes#september-29-2023",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.4.3",
+      "destination": "/release-notes#november-9-2023",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.4.0",
+      "destination": "/release-notes#march-6-2023",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.3.0",
+      "destination": "/release-notes#december-5-2022",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.2.1",
+      "destination": "/release-notes#october-5-2022",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.2.0",
+      "destination": "/release-notes#september-22-2022",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.1.0",
+      "destination": "/release-notes#august-1-2022",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/3.0.0",
+      "destination": "/release-notes#october-6-2021",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/2.9.0",
+      "destination": "/release-notes#march-5-2021",
+      "permanent": true
+    },
+    {
+      "source": "/release-notes/2.8.0",
+      "destination": "/release-notes#may-13-2020",
+      "permanent": true
+    }
+  ]
+}
