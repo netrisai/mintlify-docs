@@ -1,75 +1,76 @@
 ---
 title: "Accounts"
+sidebarTitle: "Accounts"
+description: "Manage Netris users, configure tenants for network resource delegation, define Permission Groups, and set up User Roles for role-based access control."
 ---
 
-The accounts section is for the management of user accounts, access permissions, and tenants.
+The Accounts section of the Netris Controller is where you manage everything related to user access and multi-tenancy — including creating user accounts, delegating network resources to tenants, defining granular permission sets, and assembling those permissions into reusable roles. Together, these capabilities give you fine-grained control over who can see and change what across your Netris-managed infrastructure.
+
+---
 
 ## Users
 
-Description of User account fields:
+User accounts control how individuals authenticate and what they can access within the Netris Controller.
 
-- **Username** - Unique username.
-- **Full Name** - Full Name of the user.
-- **E-mail** - The email address of the user. Also used for system notifications and for password retrieval.
-- **E-mail CC** - Send copies of email notifications to this address.
-- **Phone Number** - User's phone number.
-- **Company** - Company the user works for. Usually useful for multi-tenant systems where the company provides Netris Controller access to customers.
-- **Position** - Position within the company.
-- **User Role** - When using a User Role object to define RBAC (role-based access control), Permissions Group and Tenant fields will deactivate.
-- **Permission Group** - User permissions for viewing and editing parts of the Netris Controller. (if User Role is not used)
-- **+Tenant** - User permissions for viewing and editing services using Switch Port and IP resources assigned to various Tenants. (if User Role is not used)
+### User Account Fields
 
-Example: Creating a user with full access to all sections of Netris Controller, read-only access to resources managed by any Tenant, and full access to resources assigned to the Tenant Admin.
+| Field | Description |
+|-------|-------------|
+| **Username** | A unique identifier for the user. |
+| **Full Name** | The user's full name. |
+| **E-mail** | The user's email address. Also used for system notifications and password retrieval. |
+| **E-mail CC** | An additional address that receives copies of email notifications sent to this user. |
+| **Phone Number** | The user's phone number. |
+| **Company** | The company the user works for. Particularly useful in multi-tenant deployments where you provide Netris Controller access to external customers. |
+| **Position** | The user's position or job title within their company. |
+| **User Role** | Assigns a pre-defined User Role object to this user for role-based access control (RBAC). When a User Role is assigned, the **Permission Group** and **Tenant** fields are deactivated, as the role encapsulates both. |
+| **Permission Group** | Defines the user's view and edit permissions across Netris Controller sections. Used only when a User Role is not assigned. |
+| **+Tenant** | Grants the user view and edit access to services that use Switch Port and IP resources belonging to specific tenants. Used only when a User Role is not assigned. |
 
-<Frame caption="Figure: User Management">
-  <img src="/images/add_user.png" alt="User Management" />
-</Frame>
+<Note>
+  A single user can be given full access to all Netris Controller sections while having only read-only access to resources managed by most tenants — and full access to a specific tenant such as Admin. This is a common configuration for network operations staff.
+</Note>
 
-**Password**: To set a password or email the user for a password form, go to the listing of usernames and click the menu on the right side.
+### Setting Passwords
 
-<Frame caption="Figure: List User Accounts">
-  <img src="/images/user_set_password.png" alt="List User Accounts" />
-</Frame>
+To set a password for a user or send them a password-setup email, go to the **Users** listing, find the user, and click the action menu on the right side of their row. From there you can set the password directly or trigger a password-setup email to the user's registered address.
+
+---
 
 ## Tenants
 
-Tenants are named principals used to delegate management of network resources. The built-in `Admin` tenant owns all resources by default. Additional tenants are created to grant other teams self-service access to provision and manage network services via the Netris Controller GUI, Kubernetes CRDs, or Terraform.
+In Netris, IP addresses and network interfaces are resources that can be assigned to different **Tenants** for independent management. The **Admin** tenant is the default and owns all resources out of the box.
 
-A Tenant object has only two fields: a unique name and an optional description. It carries no quota, billing identity, or login.
+The Tenants feature is designed for sharing and delegating control over network resources. Typical use cases include:
 
-For a glossary of related concepts — including **Admin Tenant** and **Guest Tenant** — see [Definitions](/definitions).
+- Granting other internal teams the ability to request and manage their own network services through the Netris Controller as a self-service portal.
+- Enabling programmatic provisioning as part of a DevOps or NetOps pipeline using Kubernetes CRDs or Terraform.
 
-### Admin Tenant vs Guest Tenant
+A Tenant record has exactly two fields: a **unique name** and a **custom description**.
 
-VPCs and V-Nets in Netris support two tenant roles:
+<Info>
+  Tenants form the foundation of multi-tenancy in Netris. Before delegating resources to other teams or customers, create a Tenant for each organizational boundary you want to enforce.
+</Info>
 
-- The **Admin Tenant** owns the object and can manage all of its parameters.
-- **Guest Tenants** are tenants granted delegated access to add and remove resources inside the object, but cannot change the object's parameters.
-
-For a VPC, the Admin Tenant manages all VPC-level parameters. Guest Tenants of a VPC can add and remove services inside it — V-Nets, L4 Load Balancers, Server Clusters, IPAM subnets — but cannot change the VPC's own parameters.
-
-For a V-Net, the Admin Tenant manages all V-Net parameters. Guest Tenants of a V-Net can add and remove switch ports in it but cannot change the V-Net's own parameters.
-
-Example: Adding a tenant.
-
-<Frame caption="Figure: Adding Tenants">
-  <img src="/images/add_tenant.png" alt="Adding Tenants" />
-</Frame>
+---
 
 ## Permission Groups
 
-Permission Groups are a list of permissions on a per section basis that can be attached individually to a User or a User Role. Every section has a View and Edit attribute. The view defines if users with this Permission Group can see the particular section at all. Edit defines if users with this Permission Group can edit services and policies in specific sections.
+A Permission Group is a named collection of per-section access rules that can be attached to a user directly or to a User Role. Each section in the Netris Controller exposes two attributes within a Permission Group:
 
-Example: Permission Group.
+- **View** — Controls whether users with this group can see the section at all.
+- **Edit** — Controls whether users with this group can create, modify, or delete services and policies within the section.
 
-<Frame caption="Figure: Managing Permissions">
-  <img src="/images/add_perm_group.png" alt="Managing Permissions" />
-</Frame>
+You can create as many Permission Groups as needed and reuse them across multiple users or roles.
+
+---
 
 ## User Roles
 
-Permission Groups and Tenants can be either linked directly to an individual username or can be linked to a User Role object which then can be linked to an individual username.
+A **User Role** is a named object that combines a Permission Group and one or more Tenant assignments into a single reusable bundle. Instead of configuring permissions and tenant access individually on every user account, you define a User Role once and then assign it to any number of users.
 
-<Frame caption="Figure: User Roles">
-  <img src="/images/add_user_role.png" alt="User Roles" />
-</Frame>
+When a User Role is assigned to a user account, the standalone **Permission Group** and **Tenant** fields on that account are deactivated — all access is governed by the role.
+
+<Tip>
+  User Roles are the recommended approach for managing access at scale. Define roles that reflect your organizational structure (for example, "Network Operator — Pod A" or "Customer Read-Only") and assign them to users as people join or change responsibilities.
+</Tip>
