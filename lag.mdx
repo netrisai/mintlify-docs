@@ -1,71 +1,76 @@
 ---
 title: "Link Aggregation (LAG)"
+sidebarTitle: "LAG"
+description: "Configure automatic or custom LAG and EVPN multi-homing in Netris to bond multiple switch ports for higher throughput and link redundancy."
 ---
 
-Link Aggregation (LAG), also known as link bundling, Ethernet/network/NIC bonding, or port teaming, is a method of combining (aggregating) multiple network connections in parallel to increase throughput beyond what a single connection could sustain and to provide redundancy in case one of the links fails.
+**Link Aggregation (LAG)** — also known as link bundling, NIC bonding, or port teaming — combines multiple physical network connections in parallel to deliver higher aggregate throughput than any single link could sustain, while providing redundancy in case an individual link fails. The **Link Aggregation Control Protocol (LACP)** handles the collective management of those physical ports so that the network treats them as a single logical channel.
 
-<Frame>
-  <img src="/images/lag_diagram.png" alt="LAG diagram" />
-</Frame>
+Netris supports two modes of LAG configuration: **Automatic** (using EVPN Multi-Homing) and **Custom** (manually defined). Choose the mode that best matches your hardware capabilities and redundancy requirements.
 
-The Link Aggregation Control Protocol (LACP) is a key component of LAG. It's a protocol for the collective handling of multiple physical ports that can be seen as a single channel for network traffic.
+1st edit. not using branches
 
-Netris supports Automatic and Custom modes of configuring LAGs, each described below.
+---
 
-## Automatic LAG with EVPN Multi-homing
+## Automatic LAG with EVPN Multi-Homing
 
-If LACP is configured on the server side, then Netris will automatically identify the corresponding switch port pairs and form a LAG with EVPN Multihoming enabled for any switch ports participating in a V-Net service.
+When LACP is configured on the server side, Netris automatically identifies matching switch port pairs and forms a LAG with EVPN Multi-Homing (EVPN-MH) enabled for any ports participating in a V-Net service. You do not need to manually create the LAG object.
 
-EVPN Multi-Homing (EVPN-MH) offers robust support for an all-active redundancy model for servers. This means that all connections from a server to multiple switches are concurrently active and operational, ensuring high availability, load balancing, and seamless failover capabilities. As a result, EVPN-MH enhances network resilience and continuity of service.
+**EVPN Multi-Homing** provides an all-active redundancy model for multi-homed servers. All connections from a server to multiple switches are concurrently active — delivering high availability, load balancing, and seamless failover. If Active-Active Multi-Homing is not supported on your hardware, Netris automatically falls back to Active-Standby LACP LAG.
 
-<Frame>
-  <img src="/images/lag_diagram2.png" alt="EVPN-MH diagram" />
-</Frame>
+<Note>
+  In both Active-Active and Active-Standby cases, LACP must be configured on the server side. If the server does not have LACP configured, the LAG falls back to non-LACP mode and one of the two links remains active.
+</Note>
 
-**Note: Active Active Multi-homing is currently limited to:**
+### Requirements for Active-Active Multi-Homing
 
-- Switch OS Cumulus 5.3 or higher.
-- Netris 4.0 or higher.
-- One port per switch (can be overcome in Custom LAG).
-- Only two switches in EVPN-MH domain with ASIC Spectrum A1.
+- Cumulus Linux 5.3 or higher
+- Netris 4.0 or higher
+- One port per switch (this limitation can be overcome with a Custom LAG)
+- A maximum of two switches in the EVPN-MH domain when using ASIC Spectrum A1
 
-When you add switch ports to a V-Net service, Netris agents automatically configure LAG and apply LACP with EVPN-MH and LACP fallback. If Active-Active Multi Homing is not supported on your hardware, Active-Standby LACP LAG will be configured.
+### Enabling Automatic LAG
 
-Both in Active-Active and Active-Standby cases LACP should be configured on the server side. If the server does not have LACP configured, the LAG will fallback into non LACP mode and one of two links will still remain active.
+To use Automatic LAG, enable the **Automatic Link Aggregation** setting in the Inventory Profile assigned to your switches. See the [Inventory Profiles](/inventory-profile) documentation for details.
 
-To create a V-Net with EVPN-MH go to Service → V-Net → +Add
+<Warning>
+  Enabling **Automatic Link Aggregation** in an Inventory Profile automatically disables MC-LAG for those devices. The two multihoming methods cannot operate simultaneously on the same switches.
+</Warning>
 
-<Frame>
-  <img src="/images/lag_add_vnet.png" alt="Add LAG to V-Net" />
-</Frame>
+### Adding a V-Net with EVPN-MH
+
+To create a V-Net that benefits from automatic EVPN-MH LAG, navigate to **Service → V-Net → +Add** and add the switch ports that connect to your multi-homed server. Netris agents will automatically configure LAG, LACP with EVPN-MH, and LACP fallback.
+
+---
 
 ## Custom LAG
 
-There are several use cases when you may need a Custom (manually configured) LAG.
+A Custom LAG gives you direct control over which ports are bundled and how. Use Custom LAG in the following situations:
 
-- Aggregate more than one port per each switch (with or without EVPN).
-- LACP fallback is not sufficient and needs to be unconditionally disabled on the switch side. EVPN-MH will be deactivated in this case.
+- You need to aggregate **more than one port per switch** (with or without EVPN).
+- You need to **unconditionally disable LACP fallback** on the switch side. Note that EVPN-MH will be deactivated in this case.
 
-<Frame>
-  <img src="/images/lag_diagram3.png" alt="Custom LAG diagram" />
-</Frame>
+<Note>
+  A Custom LAG is always scoped to a single switch. However, if you add two or more Custom LAGs from different switches to the same V-Net, EVPN-MH is automatically activated.
+</Note>
 
-Please note that a Custom LAG can only be created with one switch. However, if you add two or more Custom LAGs to a V-Net, EVPN-MH will be automatically activated.
+### Creating a Custom LAG
 
-To create a Custom LAG go to Network → Network Interfaces.
+<Steps>
+  <Step title="Navigate to Network Interfaces">
+    Go to **Network → Network Interfaces** in the Netris Controller web UI.
+  </Step>
+  <Step title="Add a new LAG">
+    Click **Add** to create a new LAG object and select the switch ports you want to bundle.
+  </Step>
+  <Step title="Set options">
+    Configure the required LAG options in the form, then save.
+  </Step>
+  <Step title="Add to V-Net (optional)">
+    To apply EVPN-MH, add two or more Custom LAGs (from different switches) to the same V-Net via **Service → V-Net**.
+  </Step>
+</Steps>
 
-<Frame>
-  <img src="/images/lag_add_lag.png" alt="Add Custom LAG" />
-</Frame>
-
-Add a new LAG.
-
-<Frame>
-  <img src="/images/lag_add_lag2.png" alt="Add Custom LAG" width="543px" height="337px" />
-</Frame>
-
-Set necessary options.
-
-<Frame>
-  <img src="/images/lag_add_lag3.png" alt="Add Custom LAG" width="543px" height="337px" />
-</Frame>
+<Tip>
+  You can also add ports to an existing LAG directly from the Switch Ports section using the **Add to LAG** quick action.
+</Tip>
