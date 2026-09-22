@@ -4,104 +4,213 @@ sidebarTitle: "Inventory Profiles"
 description: "Apply Inventory Profiles to harden managed switches and SoftGates, configure BGP settings, GPU cluster QoS, SNMP credentials, and Zero Touch Provisioning."
 ---
 
-**Inventory Profiles** are reusable configuration objects you attach to switches and SoftGate nodes to enable security hardening and fabric-wide optimizations. By default, all traffic destined to a switch or SoftGate is permitted. The moment you attach an Inventory Profile to a device, Netris applies an implicit inbound deny ACL and then selectively re-allows only the traffic flows that are required for the device to operate. This hardens each managed device without requiring you to manually author ACL rules for every node.
+## Overview
 
-The following flows are **automatically allowed** when a profile is attached:
+Inventory profiles allow security hardening of inventory devices and fabric-wide configuration optimizations.
 
-- SSH from user-defined allowed subnets
-- NTP from user-defined NTP services
-- DNS from user-defined DNS servers
-- SNMP from user-defined subnets
-- BGP, ICMP, and DHCP
-- Any custom user-defined rules you add to the profile
+By default all traffic flow destined to switch/SoftGate is allowed. As soon as the inventory profile is attached to a device it denies all traffic destined to the device except Netris-defined and user-defined custom flows.
 
-## Inventory Profile Fields
+Automatically allowed IPv4 and IPv6 inbound flows include:
 
-| Field | Description |
-|---|---|
-| **Name** | A unique name for this Inventory Profile. |
-| **Description** | Free-text description of the profile. |
-| **Allow SSH from IPv4** | List of IPv4 subnets (one per line) permitted to connect via SSH to devices using this profile. |
-| **Allow SSH from IPv6** | List of IPv6 subnets (one per line) permitted to connect via SSH to devices using this profile. |
-| **Timezone** | Devices using this profile will synchronize their system clock to the selected timezone. |
-| **NTP Servers** | List of domain names or IP addresses of NTP servers (one per line). You can use your Netris Controller address as an NTP server for your switches and SoftGate nodes. |
-| **DNS Servers** | List of IP addresses of DNS servers (one per line). You can use your Netris Controller address as a DNS server for your switches and SoftGate nodes. |
+- SSH TCP port 22 from user defined subnets
+- NTP UDP port 123
+- DNS UDP and TCP port 53
+- SNMP UDP port 161 (IPv4 only) from user defined subnets
+- BGP TCP port 179 from defined neighbors and fe80::/64
+- ICMP
+- DHCP
+- Custom user defined rules
 
----
+**Inventory Profile Fields**
 
-## SNMPv2 Credentials
+|  |  |
+| --- | --- |
+| **Name** | Profile name |
+| **Description** | Free text description |
+| **Allow SSH from IPv4** | List of IPv4 subnets allowed to ssh (one address per line) |
+| **Allow SSH from IPv6** | List of IPv6 subnets allowed to ssh (one address per line) |
+| **Timezone** | Devices using this inventory profile will adjust their system time to the selected timezone. |
+| **NTP servers** | List of domain names or IP addresses of NTP servers (one address per line). You can use your Netris Controller address as an NTP server for your switches and SoftGate. |
+| **DNS servers** | List of IP addresses of DNS servers (one address per line). You can use your Netris Controller address as a DNS server for your switches and SoftGate. |
+| **SNMPv2** | SNMPv2 Read-Only Community; IPv4 allow list; Contact information; Location information |
+| **NetQ** | NetQ server address and port |
+| **Syslog Servers** | Up to 4 remote syslog servers; RFC 5424 format toggle |
+| **AAA** | Authentication order for device login (Local, RADIUS); up to 8 RADIUS servers with authentication type and shared secret |
 
-Netris administrators can configure SNMPv2 credentials in an Inventory Profile to enable monitoring of switches and SoftGates. To add SNMPv2 credentials, expand the **SNMPv2** section of the Inventory Profile form, enable the checkbox, and fill in the fields below.
+<Frame>
+  ![Inventory Profile Top](/images/Inventory-Profile-Top.png)
+</Frame>
 
-| Field | Required | Description |
-|---|---|---|
-| **Read-Only Community** | ✅ Required | The SNMPv2 read-only community string. |
-| **Allow SNMPv2 from IPv4** | ✅ Required | IPv4 subnets from which SNMPv2 requests will be accepted. |
-| **SNMP Contact** | Optional | Contact information embedded in SNMP responses. |
-| **SNMP Location** | Optional | Location information embedded in SNMP responses. |
+<br />
 
----
+## SNMPv2 credentials
+
+Netris administrators can define SNMPv2 credentials to monitor switches in the inventory. To add SNMPv2 credentials, expand the SNMPv2 section of the Inventory Profile form, set the checkbox to enabled, and fill in the fields as described below:
+
+**SNMPv2 Fields**
+
+|  |  |  |
+| --- | --- | --- |
+| Read-Only Community | ✅ required | Specify the SNMPv2 read-only community string. |
+| Allow SNMPv2 from IPv4 | ✅ required | Specify the IPv4 subnets from which SNMPv2 requests will be accepted. |
+| SNMP Contact | 🔹 Optional | Specify the SNMP contact information. |
+| SNMP Location | 🔹 Optional | Specify the SNMP location information. |
+
+<Frame>
+  ![SNMPv2 settings](/images/SNMPv2-settings.png)
+</Frame>
+
+<br />
+
+<Note>
+  Configuring SNMP monitoring of SoftGates is planned for future releases.
+</Note>
+
+## NetQ Settings
+
+Netris administrators can define the NetQ server address and port to automatically configure the NetQ client on Cumulus Linux-based switches.
+
+**NetQ Fields**
+
+|  |  |  |
+| --- | --- | --- |
+| NetQ Server | ✅ required | Specify the IP address(es) or the FQDN of the NetQ server. You can specify one(1) or three(3) addresses separated by commas or one FQDN. |
+| NetQ Port | ✅ required | Specify the port of the NetQ server. Default is 31980. |
+
+<Frame>
+  ![NetQ IPs](/images/NetQ-IPs.png)
+</Frame>
+
+<br />
+
+<Frame>
+  ![NetQ FQDN](/images/NetQ-FQDN.png)
+</Frame>
+
+<br />
+
+<Tip>
+  You may also export your network topology as a Graphviz DOT file to import into your NetQ instance. See [NVIDIA NetQ Integration](/monitoring-observability/netq) for more details.
+</Tip>
+
+## Syslog Settings
+
+Netris administrators can define up to four remote syslog destinations per Inventory Profile. Once configured, Netris pushes the syslog configuration to every switch assigned to the profile, so devices forward their logs to your SIEM or log collection system without any manual per-switch configuration. To configure syslog forwarding, expand the Syslog Servers section of the Inventory Profile form, set the checkbox to enabled, and fill in the fields as described below:
+
+**Syslog Fields**
+
+|  |  |  |
+| --- | --- | --- |
+| RFC 5424 Format | 🔹 Optional | Send messages in the structured RFC 5424 format. When disabled (default), messages use the legacy RFC 3164 format. |
+| Host / Server Address | ✅ required | IPv4 address or FQDN of the remote syslog server. |
+| Port | ✅ required | Destination port. Default is 514. |
+| Protocol | ✅ required | UDP (default) or TCP. |
+| Severity Level | ✅ required | Minimum severity to forward: Emergency, Alert, Critical, Error, Warning, Notice, Informational (default), or Debug. Only messages at or above the selected severity are forwarded. |
+
+<Frame caption="Figure: Syslog Servers section of the Inventory Profile form">
+  ![Syslog Servers section of the Inventory Profile form](/images/inventory-profile-syslog.png)
+</Frame>
+
+Use **\+ Add** to configure additional servers, up to four per profile. Each server row can be removed with the trash icon; at least one server must remain while Syslog is enabled.
+
+Syslog destination configuration is supported on Arista EOS, NVIDIA Cumulus Linux, and Dell SONiC switches. See the [Supported Functionality and Platforms Matrix](/supported-platform-matrix) for platform-by-platform support.
+
+## AAA Settings
+
+Netris administrators can configure how operators authenticate when logging in to switches assigned to an Inventory Profile. By default, switches accept only the local admin account whose password is set in [ZTP Settings](#ztp-settings). The AAA section adds RADIUS authentication so that device logins are checked against your centralized AAA infrastructure with per-user accountability, instead of a shared local account.
+
+The AAA section has two parts: a profile-wide **Authentication Order** and a **RADIUS** subsection. Netris pushes the resulting configuration to every switch assigned to the profile. Changes take effect without a reboot or agent restart, and no per-switch configuration is required.
+
+### Authentication Order
+
+The **Authentication Order** control lists the authentication methods a switch tries, from left to right, as a row of chips. The default order is a single chip, **Local**. Drag chips to reorder them, or remove a chip with its **×**. At least one method must remain in the order.
+
+Only methods that are enabled below can be added to the order. RADIUS appears in the list of available methods only after the RADIUS subsection is enabled.
+
+<Warning>
+  Removing **Local** from the Authentication Order leaves RADIUS as the only login method. If every configured RADIUS server becomes unreachable, operators are locked out of device login. Netris displays a warning in the form when Local is not in the order; keep Local in the order unless you have an out-of-band recovery path.
+</Warning>
+
+### RADIUS
+
+To enable RADIUS authentication, expand the RADIUS subsection of the Inventory Profile form, set the checkbox to enabled, and fill in the fields as described below:
+
+**RADIUS Fields**
+
+|  |  |  |
+| --- | --- | --- |
+| Authentication Type | ✅ required | RADIUS authentication protocol: Default, CHAP, PAP, or MSCHAPv2. Default applies the platform's own default (MSCHAPv2 on Cumulus Linux, PAP on Dell SONiC). Arista EOS does not expose this setting and ignores the selected value. |
+| Host | ✅ required | IPv4 address or FQDN of the RADIUS server. Each host and port pair must be unique within the profile. |
+| Port | ✅ required | RADIUS authentication port. Default is 1812. |
+| Secret | ✅ required | Shared secret used to authenticate with this RADIUS server. The secret is masked in the form, stored encrypted, and never returned by the API. When editing an existing server, leave the field empty to keep the stored secret. |
+
+Servers are tried in the order shown, top row first; there is no separate priority field. Drag a row's handle on the left to reorder it. Use **\+ Add Server** to configure additional servers, up to eight per profile. Each server row can be removed with the trash icon; at least one server must remain while RADIUS is enabled.
+
+When RADIUS is enabled and placed ahead of Local in the Authentication Order, switches try each RADIUS server in turn and fall back to the local admin account only if none of the servers respond. A valid local account can always log in as long as Local remains in the order. Disabling the RADIUS subsection removes the RADIUS configuration from every switch in the profile and returns the devices to local-only authentication.
+
+<Note>
+  RADIUS traffic is initiated by the switch, so no [Custom Rule](#custom-rules) is needed to allow it through the profile's implicit deny ACL.
+</Note>
+
+RADIUS authentication is supported on Arista EOS, NVIDIA Cumulus Linux, and Dell SONiC switches. See the [Supported Functionality and Platforms Matrix](/supported-platform-matrix) for platform-by-platform support.
 
 ## Fabric Settings
 
-The Fabric Settings section lets Netris automatically optimize switch fabric configurations based on your design and preferences.
+Netris can automatically optimize fabric configurations based on the administrator's design and preferences. The following controls are available in the Fabric Settings section of the Inventory Profile form:
 
-| Setting | Default | Description |
-|---|---|---|
-| **Fabric Type** | General Purpose | Acts as a filter determining which switches are subject to the BGP Overlay optimization feature. Supported values: `Generic`, `East-West`, `East-West-Plane1` through `East-West-Plane4`, `North-South`, `OOB`. |
-| **Optimize BGP Overlay for leaf-spine topology** | Checked | When enabled, each leaf switch forms overlay BGP sessions only with the two spine switches with the lowest IDs, optimizing for large-scale deployments. When unchecked, overlay BGP sessions are configured on all point-to-point links. |
-| **Optimize BGP Overlay for Hypervisor Integrated Fabric** | Unchecked | Required for BGP/EVPN VXLAN integration with compute hypervisor networking. Prevents a large number of hypervisor virtual networking EVPN prefixes from overflowing switch TCAM. |
-| **BGP Numbered Underlay** | Unchecked | When enabled, BGP underlay sessions use point-to-point IPv4 addresses configured on link objects in the controller. When disabled, BGP unnumbered is used with IPv6 link-local addresses. |
-| **Automatic Link Aggregation** | Unchecked | When enabled, MC-LAG is automatically disabled. Enables EVPN Multi-Homing-based LAG. |
-| **Enable MC-LAG** | Unchecked | When enabled, Automatic Link Aggregation is automatically disabled. Enables MC-LAG functionality. |
-
-<Warning>
-  Enabling MC-LAG functionality disables all EVPN-MH functionality. Two multihoming methods are not supported simultaneously on the same switches.
-</Warning>
-
----
+- **Fabric Type** (default = General Purpose).  The selected fabric type acts as a filter to determine which switches are subject to the "Optimize BGP Overlay for leaf-spine topology" feature as described below. Supported values include:
+  - Generic
+  - East-West
+  - East-West-Plane1
+  - East-West-Plane2
+  - East-West-Plane3
+  - East-West-Plane4
+  - North-South
+  - OOB
+- **Optimize BGP Overlay for leaf-spine topology** (default = checked). When checked, Netris applies the following logic to all switches sharing the Fabric Type value set in this Inventory Profile. Netris configures designated switches as EVPN Route Servers (EVPN-RS), and each switch with the Switch Role property set to Leaf forms overlay BGP sessions (address-family l2vpn evpn) exclusively with those nodes. No other overlay BGP sessions are configured. EVPN-RS designation works as follows:
+  - If no switch object has the [EVPN Route Server property](/topology-management#adding-switches) set, Netris automatically selects the two switches with the Switch Role property set to Super-Spine — or, if no Super-Spine switches are present, the two switches with the Switch Role property set to Spine — with the lowest loopback IPs.
+  - If one or more switch objects have the [EVPN Route Server property](/topology-management#adding-switches) set, automatic selection is disabled entirely and Netris uses only the explicitly designated switches as EVPN-RS nodes.
+  - Because setting the property on even one switch disables automatic selection, operators should explicitly designate at least two switches for redundancy. Netris does not automatically enforce this recommendation. When unchecked, overlay BGP sessions are configured on all point-to-point links.
+- **Optimize BGP Overlay for Hypervisor Integrated Fabric** (default = unchecked). Required for BGP/EVPN VXLAN integration with compute hypervisor networking. This optimization makes sure that a large number of hypervisor virtual networking EVPN prefixes do not overflow switch TCAM.
+- **BGP Numbered Underlay** (default = unchecked). When checked, BGP underlay sessions will be configured using p2p IPv4 addresses configured on link objects in the Netris controller. Otherwise, the BGP unnumbered method is used, and BGP sessions use p2p IPv6 link-local addresses.
+- **Automatic Link Aggregation** (default = unchecked). When checked, the UI automatically unchecks Enable MC-LAG.
+- **Generate ESI by Server ID** (default = unchecked). When checked, ESI-IDs are generated using server-ID-based logic instead of the default partner-MAC-based method. The setting is backward compatible: existing ESI-IDs remain valid, and servers not modeled in Netris automatically fall back to partner-MAC-based generation. Note that when multiple bond interfaces are present on servers, this should remain unchecked.
+- **Enable MC-LAG** (default = unchecked). When checked, Automatic Link Aggregation will automatically become unchecked through the UI. If unchecked none of MC-LAG related configurations should be generated by switch agents. Help message: “Enabling MC-LAG functionality will disable any EVPN-MH functionality. Two multihoming methods are not supported simultaneously on the same switches.”
 
 ## GPU Cluster Specific Settings
 
-When your Inventory Profile is applied to an East-West GPU interconnect fabric, the following additional optimizations are available.
+Additional optimizations are available for East-West GPU interconnect fabrics.
 
-| Setting | Default | Description |
-|---|---|---|
-| **QoS & RoCE** | Unchecked | Optimize Quality of Service for RDMA over Converged Ethernet. |
-| **RoCE Adaptive Routing (AR)** | Unchecked | Enable Adaptive Routing for RoCE traffic. |
-| **Congestion Control** | Unchecked | Enable Zero Touch RoCE Congestion Control. |
-| **ASIC Monitoring** | Unchecked | Enable ASIC monitoring including histograms and telemetry snapshots. |
-| **HWMP** | Unchecked | Enable Hardware Multiplane (HWMP) support for GPU cluster fabrics with multiple planes of switches and leaf-spine topology. You must also set the appropriate Reference Architecture when enabling this option. |
-| **Reference Architecture** | None | Tells Netris which reference architecture is being deployed so it can apply the appropriate prefix summarization in the L3VPN overlay. |
-
-### Reference Architecture Summarization Masks
-
-| Reference Architecture | IPv4 Summarization Mask | IPv6 Summarization Mask |
-|---|---|---|
-| H100/H200/B200 SPX 2-TIER, H100/H200/B200 SPX 3-TIER | /26 | /56 |
-| GB200 SPX 2-TIER, GB200 SPX 3-TIER | /25 | /46 |
-| B300 SPX 2-TIER SINGLE-PLANE, B300 SPX 3-TIER SINGLE-PLANE, B300 SPX 2-TIER DUAL-PLANE, B300 SPX 3-TIER DUAL-PLANE, B300 SPX 2-TIER QUAD-PLANE, B300 SPX 3-TIER QUAD-PLANE, GB300 SPX 2-TIER SINGLE-PLANE, GB300 SPX 3-TIER SINGLE-PLANE, GB300 SPX 2-TIER DUAL-PLANE, GB300 SPX 3-TIER DUAL-PLANE, GB300 SPX 2-TIER QUAD-PLANE, GB300 SPX 3-TIER QUAD-PLANE | /24 | /56 |
-
----
+- **QoS & RoCE** (default = unchecked) Optimize for RDMA over Converged Ethernet
+- **RoCE Adaptive Routing (AR)** (default = unchecked) Enable Adaptive Routing for RoCE
+- **Congestion Control** (default = unchecked) Enable Zero Touch RoCE Congestion Control
+- **ASIC monitoring** (default = unchecked) Enable ASIC monitoring: histograms and telemetry snapshots.
+- **HWMP** (default = unchecked) Enable Hardware Multiplane (HWMP) support for GPU cluster fabrics with multiple planes of switches and leaf-spine topology. Must set the appropriate Reference Architecture.
+- **Reference Architecture** (default = None)  This setting tells Netris which reference architecture is being deployed on the subject fabric, so Netris can apply the appropriate prefix summarization in the L3VPN overlay.
+  <Accordion title="Reference Architectures">
+    | Reference Architecture | IPv4 <br />Summarization mask | IPv6 <br />Summarization mask |
+    | --- | --- | --- |
+    | H100/H200/B200 SPX 2-TIER <br />H100/H200/B200 SPX 3-TIER | /26 | /56 |
+    | GB200 SPX 2-TIER <br />GB200 SPX 3-TIER | /25 | /56 |
+    | B300/GB300 SPX 2-TIER/3-TIER, SINGLE/DUAL/QUAD-PLANE (all combinations) | /24 | /56 |
+  </Accordion>
 
 ## Custom Rules
 
-Custom Rules let you define additional allow or deny flows for traffic directed at inventory devices beyond what Netris automatically permits.
+Custom rules allow the administrator to define specific allow/deny flows to/from inventory devices.
 
-When an Inventory Profile is attached to a switch or SoftGate, Netris configures an implicit inbound deny ACL. Several rules are automatically inserted to allow necessary system service connections (NTP, DNS, SSH from allowed hosts, BGP, ICMP, DHCP, SNMP). All other inbound traffic is blocked. If you need to permit additional inbound services — such as NetFlow or sFlow — you can use Custom Rules to allow those connections.
+If an inventory profile is attached to a switch or a softgate, then Netris configures an implicit inbound deny ACL. Several rules are automatically added to this ACL to allow the necessary system services connections like NTP, DNS, SSH from Allowed Hosts, BGP, ICMP, DHCP, SNMP. Everything else is denied by the implicit deny rule. If additional inbound services (e.g., Netflow/Sflow) need to be allowed, you can use Custom Rules to permit those connections.
 
-<Tip>
-  As an example, you can add a Custom Rule to allow inbound TCP traffic on port 555 from a specific management host (e.g., `1.1.1.1/32`) to the inventory device.
-</Tip>
+In the example below, a custom rule is defined to allow inbound TCP traffic on port 555 from 1.1.1.1/32 to the inventory device.
 
----
+<Frame>
+  ![CustomRules](/images/CustomRules.png)
+</Frame>
+
+<br />
 
 ## ZTP Settings
 
-The ZTP Settings section configures Zero Touch Provisioning behavior for switches subject to this Inventory Profile.
-
-| Field | Description |
-|---|---|
-| **NOS Image File** | The Network Operating System image used to bootstrap switches during ZTP. |
-| **NOS Admin Password** | The password Netris configures for the built-in admin user once ZTP completes. |
-| **NOS Admin Confirm Password** | Confirmation of the NOS Admin Password. |
+- **NOS Image file** When Zero Touch Provisioning (ZTP) is in use, this Network Operating System image will be used to bootstrap the switches subject to this Inventory Profile.
+- **NOS Admin Password** Once the ZTP process completes, Netris will configure this password for the builtin admin user.
+- **NOS Admin Confirm Password** Confirmation of the NOS Admin Password.
