@@ -36,7 +36,8 @@
               "introduction",
               "definitions",
               "netris-architecture"
-            ]
+            ],
+            "public": true
           },
           {
             "group": "Try & Learn",
