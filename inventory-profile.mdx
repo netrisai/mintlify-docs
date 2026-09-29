@@ -42,6 +42,45 @@ Netris administrators can configure SNMPv2 credentials in an Inventory Profile t
 
 ---
 
+## AAA
+
+The AAA section controls how operators authenticate when they log in to switches that use this Inventory Profile. By default, a switch accepts only its local admin account, whose password is set in [ZTP Settings](#ztp-settings). Enabling RADIUS authenticates device logins against your centralized AAA infrastructure, giving you per-user accountability instead of a shared local account.
+
+The section has two parts: a profile-wide **Authentication Order** and a **RADIUS** subsection. Netris pushes the resulting configuration to every switch assigned to the profile. Changes apply without a reboot or agent restart, and no per-switch configuration is required.
+
+### Authentication Order
+
+**Authentication Order** is a row of chips listing the methods a switch tries, from left to right. The default is a single chip, **Local**. Drag chips to reorder them, or remove a chip with its **×**. At least one method must remain.
+
+Only methods enabled in the AAA section can be added to the order; **RADIUS** becomes available once the RADIUS subsection is enabled.
+
+<Warning>
+  Removing **Local** from the Authentication Order leaves RADIUS as the only login method. If every configured RADIUS server becomes unreachable, operators are locked out of device login. The form shows a warning whenever Local is not in the order. Keep Local in the order unless you have an out-of-band recovery path.
+</Warning>
+
+### RADIUS
+
+To enable RADIUS authentication, expand the **RADIUS** subsection of the Inventory Profile form, enable the checkbox, and fill in the fields below.
+
+| Field | Required | Description |
+| --- | --- | --- |
+| **Authentication Type** | ✅ Required | RADIUS authentication protocol: `Default`, `CHAP`, `PAP`, or `MSCHAPv2`. `Default` uses the switch platform's own default (MSCHAPv2 on Cumulus Linux, PAP on Dell SONiC). |
+| **Host** | ✅ Required | IPv4 address or FQDN of the RADIUS server. Each host and port pair must be unique within the profile. |
+| **Port** | ✅ Required | RADIUS authentication port. Default is `1812`. |
+| **Secret** | ✅ Required | Shared secret used to authenticate with this RADIUS server. It is masked in the form, stored encrypted, and never returned by the API. When editing an existing server, leave the field empty to keep the stored secret. |
+
+Servers are tried in the order shown, top row first; there is no separate priority field. Drag a row's handle on the left to reorder it. Use **Add Server** to configure additional servers, up to eight per profile. Remove a server with the trash icon; at least one server must remain while RADIUS is enabled.
+
+When RADIUS is enabled and placed ahead of Local in the Authentication Order, a switch tries each RADIUS server in turn and falls back to the local admin account only if none of the servers respond. A valid local account can always log in as long as Local remains in the order. Disabling the RADIUS subsection removes the RADIUS configuration from every switch in the profile and returns those switches to local-only authentication.
+
+<Note>
+  RADIUS traffic is initiated by the switch, so no [Custom Rule](#custom-rules) is needed to allow it through the profile's implicit deny ACL.
+</Note>
+
+RADIUS authentication is supported on NVIDIA Cumulus Linux and Dell SONiC switches. See the [Supported Functionality and Platforms Matrix](/supported-platform-matrix) for platform-by-platform support.
+
+---
+
 ## Fabric Settings
 
 The Fabric Settings section lets Netris automatically optimize switch fabric configurations based on your design and preferences.
