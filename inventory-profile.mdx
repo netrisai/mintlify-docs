@@ -46,7 +46,15 @@ Netris administrators can configure SNMPv2 credentials in an Inventory Profile t
 
 The AAA section controls how operators authenticate when they log in to switches that use this Inventory Profile. By default, a switch accepts only its local admin account, whose password is set in [ZTP Settings](#ztp-settings). Enabling RADIUS authenticates device logins against your centralized AAA infrastructure, giving you per-user accountability instead of a shared local account.
 
-The section has two parts: a profile-wide **Authentication Order** and a **RADIUS** subsection. Netris pushes the resulting configuration to every switch assigned to the profile. Changes apply without a reboot or agent restart, and no per-switch configuration is required.
+The section has two parts:
+
+- **Authentication Order** — a profile-wide setting that defines which login methods a switch tries, and in what order.
+- **RADIUS** — a subsection where you enable RADIUS and define the servers to authenticate against.
+
+Netris pushes the resulting configuration to every switch assigned to the profile:
+
+- Changes apply without a reboot or agent restart.
+- No per-switch configuration is required.
 
 ### Authentication Order
 
