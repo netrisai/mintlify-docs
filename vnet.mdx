@@ -48,7 +48,7 @@ Every V-Net must include:
 - V-Net state,
 - List of switch ports to include in the V-Net, which can be explicitly listed or referenced through [Labels](/labels).
 
-Optionally V-Net definition can also include:
+Optionally, a V-Net definition can also include:
 
 - [Labels](/labels) for dynamic switch port inclusion into the V-Net,
 - List of collaborators (Guest tenants) who can add or remove switch ports to and from the V-Net, but not edit any other properties of the V-Net,
@@ -174,10 +174,10 @@ L3VPN V-Nets require you to provide much the same information as the L2VPN V-Net
 ### Rules and limits
 
 - VLAN-aware mode is not available with L3VPN.
-- DHCP and anycast gateway are intentionally disabled; each server must configure its own IP on the peer side of the /31.
+- DHCP (including DHCP Relay) and Anycast gateway are intentionally disabled; each server must configure its own IP on the peer side of the /31.
 - The Untagged toggle and per-port VLAN ID apply only to the interface you are adding; they never create a global broadcast domain.
 
-With these steps you have a routed, broadcast-free V-Net ready for high-scale east–west traffic.
+With these steps, you have a routed, broadcast-free V-Net ready for high-scale east–west traffic.
 
 In larger fabrics Netris recommends turning on the optional /26 aggregation in the Inventory Profile (`Network -> Inventory Profiles`) to reduce TCAM usage in the hardware.
 

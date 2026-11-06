@@ -26,163 +26,826 @@
     }
   },
   "navigation": {
-    "tabs": [
+    "versions": [
       {
-        "tab": "Overview",
-        "groups": [
+        "version": "4.19",
+        "default": true,
+        "tag": "Latest",
+        "tabs": [
           {
-            "group": "Get Started",
-            "pages": [
-              "introduction",
-              "definitions",
-              "netris-architecture"
-            ],
-            "public": true
-          },
-          {
-            "group": "Try & Learn",
-            "pages": [
-              "try-learn/nvidia-spectrum-x-scenario",
-              "try-learn/onprem-k8s"
-            ]
-          },
-          {
-            "group": "Plan Your Deployment",
-            "pages": [
-              "supported-platform-matrix",
-              "supported-switch-hardware",
-              "vpc-gateways-with-managed-fabric"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Deploy",
-        "groups": [
-          {
-            "group": "Controller",
-            "pages": [
-              "installation/installation",
-              "installation/controller-k3s-air-gap-ha",
-              "installation/controller-k8s-installation",
-              "installation/ztp"
-            ]
-          },
-          {
-            "group": "Network Switches",
-            "pages": [
-              "switch-agent-installation",
-              "nvidia-cumulus-v5.9-plus-switch-initial-setup",
-              "nvidia-cumulus-v5-switch-initial-setup",
-              "nvidia-cumulus-v3.7-switch-initial-setup",
-              "edgecore-sonic-switch-initial-setup",
-              "dell-sonic-switch-initial-setup",
-              "ubuntu-switchdev-switch-initial-setup"
-            ]
-          },
-          {
-            "group": "Edge & Host Networking",
-            "pages": [
-              "netris-softgate-hs",
-              "ai-netris-host-networking",
-              "bluefield-3-dpu-installation"
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Operate",
-        "groups": [
-          {
-            "group": "Fabric Management",
-            "pages": [
-              "general-settings",
-              "site",
-              "vpc",
-              "topology-management",
-              "inventory-profile",
-              "ipam",
-              "bgp",
-              "network-interfaces",
-              "lag",
-              "maintenance-mode",
-              "static-routing"
-            ]
-          },
-          {
-            "group": "Network Services",
-            "pages": [
+            "tab": "Overview",
+            "groups": [
               {
-                "group": "V-Net",
+                "group": "Get Started",
                 "pages": [
-                  "vnet",
-                  "dhcp-and-dhcp-relay",
-                  "link-aggregation-and-multihoming"
+                  "introduction",
+                  "definitions",
+                  "netris-architecture"
+                ],
+                "public": true
+              },
+              {
+                "group": "Try & Learn",
+                "pages": [
+                  "try-learn/nvidia-spectrum-x-scenario",
+                  "try-learn/onprem-k8s"
                 ]
               },
-              "server-cluster",
-              "nat",
-              "l4-load-balancer",
-              "vpc-peering",
-              "vpc-connect",
-              "acls"
+              {
+                "group": "Plan Your Deployment",
+                "pages": [
+                  "supported-platform-matrix",
+                  "supported-switch-hardware",
+                  "vpc-gateways-with-managed-fabric"
+                ]
+              }
             ]
           },
           {
-            "group": "Monitoring & Observability",
-            "pages": [
-              "monitoring-observability/visibility",
-              "monitoring-observability/topology-validation",
-              "monitoring-observability/netq",
-              "monitoring-observability/healthchecks",
-              "monitoring-observability/looking-glass"
+            "tab": "Deploy",
+            "groups": [
+              {
+                "group": "Controller",
+                "pages": [
+                  "installation/installation",
+                  "installation/controller-k3s-air-gap-ha",
+                  "installation/controller-k8s-installation",
+                  "installation/ztp"
+                ]
+              },
+              {
+                "group": "Network Switches",
+                "pages": [
+                  "switch-agent-installation",
+                  "nvidia-cumulus-v5.9-plus-switch-initial-setup",
+                  "nvidia-cumulus-v5-switch-initial-setup",
+                  "nvidia-cumulus-v3.7-switch-initial-setup",
+                  "dell-sonic-switch-initial-setup",
+                  "ubuntu-switchdev-switch-initial-setup"
+                ]
+              },
+              {
+                "group": "Edge & Host Networking",
+                "pages": [
+                  "netris-softgate-hs",
+                  "ai-netris-host-networking",
+                  "bluefield-3-dpu-installation"
+                ]
+              }
             ]
           },
           {
-            "group": "Administration",
-            "pages": [
-              "accounts",
-              "custom-configuration-snippets",
-              "labels",
-              "release-notes",
-              "untitled-page"
+            "tab": "Operate",
+            "groups": [
+              {
+                "group": "Fabric Management",
+                "pages": [
+                  "general-settings",
+                  "site",
+                  "vpc",
+                  "topology-management",
+                  "inventory-profile",
+                  "ipam",
+                  "bgp",
+                  "network-interfaces",
+                  "lag",
+                  "maintenance-mode",
+                  "static-routing"
+                ]
+              },
+              {
+                "group": "Network Services",
+                "pages": [
+                  {
+                    "group": "V-Net",
+                    "pages": [
+                      "vnet",
+                      "dhcp-and-dhcp-relay",
+                      "link-aggregation-and-multihoming"
+                    ]
+                  },
+                  "server-cluster",
+                  "nat",
+                  "l4-load-balancer",
+                  "vpc-peering",
+                  "vpc-connect",
+                  "acls"
+                ]
+              },
+              {
+                "group": "Monitoring & Observability",
+                "pages": [
+                  "monitoring-observability/visibility",
+                  "monitoring-observability/topology-validation",
+                  "monitoring-observability/netq",
+                  "monitoring-observability/healthchecks",
+                  "monitoring-observability/looking-glass"
+                ]
+              },
+              {
+                "group": "Administration",
+                "pages": [
+                  "accounts",
+                  "custom-configuration-snippets",
+                  "labels",
+                  "release-notes",
+                  "untitled-page"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Integrate",
+            "groups": [
+              {
+                "group": "NVIDIA Networking",
+                "pages": [
+                  "netris-ufm-integration",
+                  "netris-nvlink-integration",
+                  "evpn-on-host",
+                  "bluefield-3-dpus"
+                ]
+              },
+              {
+                "group": "Kubernetes",
+                "pages": [
+                  "kubernetes-integration"
+                ]
+              },
+              {
+                "group": "Apache CloudStack",
+                "pages": [
+                  "cloudstack/netris-cloudstack",
+                  "cloudstack/netris-cloudstack_p1",
+                  "cloudstack/netris-cloudstack_p2",
+                  "cloudstack/netris-cloudstack_p3",
+                  "cloudstack/netris-cloudstack_p4",
+                  "cloudstack/netris-cloudstack_p5"
+                ]
+              },
+              {
+                "group": "Terraform",
+                "pages": [
+                  "terraform-integration"
+                ]
+              }
             ]
           }
         ]
       },
       {
-        "tab": "Integrate",
-        "groups": [
+        "version": "4.18",
+        "tabs": [
           {
-            "group": "NVIDIA Networking",
-            "pages": [
-              "netris-ufm-integration",
-              "netris-nvlink-integration",
-              "evpn-on-host",
-              "bluefield-3-dpus"
+            "tab": "Overview",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "4.18/introduction",
+                  "4.18/definitions",
+                  "4.18/netris-architecture"
+                ],
+                "public": true
+              },
+              {
+                "group": "Try & Learn",
+                "pages": [
+                  "4.18/try-learn/nvidia-spectrum-x-scenario",
+                  "4.18/try-learn/onprem-k8s"
+                ]
+              },
+              {
+                "group": "Plan Your Deployment",
+                "pages": [
+                  "4.18/supported-platform-matrix",
+                  "4.18/supported-switch-hardware",
+                  "4.18/vpc-gateways-with-managed-fabric"
+                ]
+              }
             ]
           },
           {
-            "group": "Kubernetes",
-            "pages": [
-              "kubernetes-integration"
+            "tab": "Deploy",
+            "groups": [
+              {
+                "group": "Controller",
+                "pages": [
+                  "4.18/installation/installation",
+                  "4.18/installation/controller-k3s-air-gap-ha",
+                  "4.18/installation/controller-k8s-installation",
+                  "4.18/installation/ztp"
+                ]
+              },
+              {
+                "group": "Network Switches",
+                "pages": [
+                  "4.18/switch-agent-installation",
+                  "4.18/nvidia-cumulus-v5.9-plus-switch-initial-setup",
+                  "4.18/nvidia-cumulus-v5-switch-initial-setup",
+                  "4.18/nvidia-cumulus-v3.7-switch-initial-setup",
+                  "4.18/dell-sonic-switch-initial-setup",
+                  "4.18/ubuntu-switchdev-switch-initial-setup"
+                ]
+              },
+              {
+                "group": "Edge & Host Networking",
+                "pages": [
+                  "4.18/netris-softgate-hs",
+                  "4.18/ai-netris-host-networking",
+                  "4.18/bluefield-3-dpu-installation"
+                ]
+              }
             ]
           },
           {
-            "group": "Apache CloudStack",
-            "pages": [
-              "cloudstack/netris-cloudstack",
-              "cloudstack/netris-cloudstack_p1",
-              "cloudstack/netris-cloudstack_p2",
-              "cloudstack/netris-cloudstack_p3",
-              "cloudstack/netris-cloudstack_p4",
-              "cloudstack/netris-cloudstack_p5"
+            "tab": "Operate",
+            "groups": [
+              {
+                "group": "Fabric Management",
+                "pages": [
+                  "4.18/general-settings",
+                  "4.18/site",
+                  "4.18/vpc",
+                  "4.18/topology-management",
+                  "4.18/inventory-profile",
+                  "4.18/ipam",
+                  "4.18/bgp",
+                  "4.18/network-interfaces",
+                  "4.18/lag",
+                  "4.18/maintenance-mode",
+                  "4.18/static-routing"
+                ]
+              },
+              {
+                "group": "Network Services",
+                "pages": [
+                  {
+                    "group": "V-Net",
+                    "pages": [
+                      "4.18/vnet",
+                      "4.18/dhcp-and-dhcp-relay",
+                      "4.18/link-aggregation-and-multihoming"
+                    ]
+                  },
+                  "4.18/server-cluster",
+                  "4.18/nat",
+                  "4.18/l4-load-balancer",
+                  "4.18/vpc-peering",
+                  "4.18/vpc-connect",
+                  "4.18/acls"
+                ]
+              },
+              {
+                "group": "Monitoring & Observability",
+                "pages": [
+                  "4.18/monitoring-observability/visibility",
+                  "4.18/monitoring-observability/topology-validation",
+                  "4.18/monitoring-observability/netq",
+                  "4.18/monitoring-observability/healthchecks",
+                  "4.18/monitoring-observability/looking-glass"
+                ]
+              },
+              {
+                "group": "Administration",
+                "pages": [
+                  "4.18/accounts",
+                  "4.18/custom-configuration-snippets",
+                  "4.18/labels",
+                  "4.18/release-notes",
+                  "4.18/untitled-page"
+                ]
+              }
             ]
           },
           {
-            "group": "Terraform",
-            "pages": [
-              "terraform-integration"
+            "tab": "Integrate",
+            "groups": [
+              {
+                "group": "NVIDIA Networking",
+                "pages": [
+                  "4.18/netris-ufm-integration",
+                  "4.18/netris-nvlink-integration",
+                  "4.18/evpn-on-host",
+                  "4.18/bluefield-3-dpus"
+                ]
+              },
+              {
+                "group": "Kubernetes",
+                "pages": [
+                  "4.18/kubernetes-integration"
+                ]
+              },
+              {
+                "group": "Apache CloudStack",
+                "pages": [
+                  "4.18/cloudstack/netris-cloudstack",
+                  "4.18/cloudstack/netris-cloudstack_p1",
+                  "4.18/cloudstack/netris-cloudstack_p2",
+                  "4.18/cloudstack/netris-cloudstack_p3",
+                  "4.18/cloudstack/netris-cloudstack_p4",
+                  "4.18/cloudstack/netris-cloudstack_p5"
+                ]
+              },
+              {
+                "group": "Terraform",
+                "pages": [
+                  "4.18/terraform-integration"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "version": "4.17",
+        "tabs": [
+          {
+            "tab": "Overview",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "4.17/introduction",
+                  "4.17/definitions",
+                  "4.17/netris-architecture"
+                ],
+                "public": true
+              },
+              {
+                "group": "Try & Learn",
+                "pages": [
+                  "4.17/try-learn/nvidia-spectrum-x-scenario",
+                  "4.17/try-learn/onprem-k8s"
+                ]
+              },
+              {
+                "group": "Plan Your Deployment",
+                "pages": [
+                  "4.17/supported-platform-matrix",
+                  "4.17/supported-switch-hardware",
+                  "4.17/vpc-gateways-with-managed-fabric"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Deploy",
+            "groups": [
+              {
+                "group": "Controller",
+                "pages": [
+                  "4.17/installation/installation",
+                  "4.17/installation/controller-k3s-air-gap-ha",
+                  "4.17/installation/controller-k8s-installation",
+                  "4.17/installation/ztp"
+                ]
+              },
+              {
+                "group": "Network Switches",
+                "pages": [
+                  "4.17/switch-agent-installation",
+                  "4.17/nvidia-cumulus-v5.9-plus-switch-initial-setup",
+                  "4.17/nvidia-cumulus-v5-switch-initial-setup",
+                  "4.17/nvidia-cumulus-v3.7-switch-initial-setup",
+                  "4.17/edgecore-sonic-switch-initial-setup",
+                  "4.17/dell-sonic-switch-initial-setup",
+                  "4.17/ubuntu-switchdev-switch-initial-setup"
+                ]
+              },
+              {
+                "group": "Edge & Host Networking",
+                "pages": [
+                  "4.17/netris-softgate-hs",
+                  "4.17/ai-netris-host-networking",
+                  "4.17/bluefield-3-dpu-installation"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Operate",
+            "groups": [
+              {
+                "group": "Fabric Management",
+                "pages": [
+                  "4.17/general-settings",
+                  "4.17/site",
+                  "4.17/vpc",
+                  "4.17/topology-management",
+                  "4.17/inventory-profile",
+                  "4.17/ipam",
+                  "4.17/bgp",
+                  "4.17/network-interfaces",
+                  "4.17/lag",
+                  "4.17/maintenance-mode",
+                  "4.17/static-routing"
+                ]
+              },
+              {
+                "group": "Network Services",
+                "pages": [
+                  {
+                    "group": "V-Net",
+                    "pages": [
+                      "4.17/vnet",
+                      "4.17/dhcp-and-dhcp-relay",
+                      "4.17/link-aggregation-and-multihoming"
+                    ]
+                  },
+                  "4.17/server-cluster",
+                  "4.17/nat",
+                  "4.17/l4-load-balancer",
+                  "4.17/vpc-peering",
+                  "4.17/vpc-connect",
+                  "4.17/acls"
+                ]
+              },
+              {
+                "group": "Monitoring & Observability",
+                "pages": [
+                  "4.17/monitoring-observability/visibility",
+                  "4.17/monitoring-observability/topology-validation",
+                  "4.17/monitoring-observability/netq",
+                  "4.17/monitoring-observability/healthchecks",
+                  "4.17/monitoring-observability/looking-glass"
+                ]
+              },
+              {
+                "group": "Administration",
+                "pages": [
+                  "4.17/accounts",
+                  "4.17/custom-configuration-snippets",
+                  "4.17/labels",
+                  "4.17/release-notes",
+                  "4.17/untitled-page"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Integrate",
+            "groups": [
+              {
+                "group": "NVIDIA Networking",
+                "pages": [
+                  "4.17/netris-ufm-integration",
+                  "4.17/netris-nvlink-integration",
+                  "4.17/evpn-on-host",
+                  "4.17/bluefield-3-dpus"
+                ]
+              },
+              {
+                "group": "Kubernetes",
+                "pages": [
+                  "4.17/kubernetes-integration"
+                ]
+              },
+              {
+                "group": "Apache CloudStack",
+                "pages": [
+                  "4.17/cloudstack/netris-cloudstack",
+                  "4.17/cloudstack/netris-cloudstack_p1",
+                  "4.17/cloudstack/netris-cloudstack_p2",
+                  "4.17/cloudstack/netris-cloudstack_p3",
+                  "4.17/cloudstack/netris-cloudstack_p4",
+                  "4.17/cloudstack/netris-cloudstack_p5"
+                ]
+              },
+              {
+                "group": "Terraform",
+                "pages": [
+                  "4.17/terraform-integration"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "version": "4.16",
+        "tabs": [
+          {
+            "tab": "Overview",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "4.16/introduction",
+                  "4.16/definitions",
+                  "4.16/netris-architecture"
+                ],
+                "public": true
+              },
+              {
+                "group": "Try & Learn",
+                "pages": [
+                  "4.16/try-learn/nvidia-spectrum-x-scenario",
+                  "4.16/try-learn/onprem-k8s"
+                ]
+              },
+              {
+                "group": "Plan Your Deployment",
+                "pages": [
+                  "4.16/supported-platform-matrix",
+                  "4.16/supported-switch-hardware",
+                  "4.16/vpc-gateways-with-managed-fabric"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Deploy",
+            "groups": [
+              {
+                "group": "Controller",
+                "pages": [
+                  "4.16/installation/installation",
+                  "4.16/installation/controller-k3s-air-gap-ha",
+                  "4.16/installation/controller-k8s-installation",
+                  "4.16/installation/ztp"
+                ]
+              },
+              {
+                "group": "Network Switches",
+                "pages": [
+                  "4.16/switch-agent-installation",
+                  "4.16/nvidia-cumulus-v5.9-plus-switch-initial-setup",
+                  "4.16/nvidia-cumulus-v5-switch-initial-setup",
+                  "4.16/nvidia-cumulus-v3.7-switch-initial-setup",
+                  "4.16/edgecore-sonic-switch-initial-setup",
+                  "4.16/dell-sonic-switch-initial-setup",
+                  "4.16/ubuntu-switchdev-switch-initial-setup"
+                ]
+              },
+              {
+                "group": "Edge & Host Networking",
+                "pages": [
+                  "4.16/netris-softgate-hs",
+                  "4.16/ai-netris-host-networking",
+                  "4.16/bluefield-3-dpu-installation"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Operate",
+            "groups": [
+              {
+                "group": "Fabric Management",
+                "pages": [
+                  "4.16/general-settings",
+                  "4.16/site",
+                  "4.16/vpc",
+                  "4.16/topology-management",
+                  "4.16/inventory-profile",
+                  "4.16/ipam",
+                  "4.16/bgp",
+                  "4.16/network-interfaces",
+                  "4.16/lag",
+                  "4.16/maintenance-mode",
+                  "4.16/static-routing"
+                ]
+              },
+              {
+                "group": "Network Services",
+                "pages": [
+                  {
+                    "group": "V-Net",
+                    "pages": [
+                      "4.16/vnet",
+                      "4.16/dhcp-and-dhcp-relay",
+                      "4.16/link-aggregation-and-multihoming"
+                    ]
+                  },
+                  "4.16/server-cluster",
+                  "4.16/nat",
+                  "4.16/l4-load-balancer",
+                  "4.16/vpc-peering",
+                  "4.16/vpc-connect",
+                  "4.16/acls"
+                ]
+              },
+              {
+                "group": "Monitoring & Observability",
+                "pages": [
+                  "4.16/monitoring-observability/visibility",
+                  "4.16/monitoring-observability/topology-validation",
+                  "4.16/monitoring-observability/netq",
+                  "4.16/monitoring-observability/healthchecks",
+                  "4.16/monitoring-observability/looking-glass"
+                ]
+              },
+              {
+                "group": "Administration",
+                "pages": [
+                  "4.16/accounts",
+                  "4.16/custom-configuration-snippets",
+                  "4.16/labels",
+                  "4.16/release-notes",
+                  "4.16/untitled-page"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Integrate",
+            "groups": [
+              {
+                "group": "NVIDIA Networking",
+                "pages": [
+                  "4.16/netris-ufm-integration",
+                  "4.16/netris-nvlink-integration",
+                  "4.16/evpn-on-host",
+                  "4.16/bluefield-3-dpus"
+                ]
+              },
+              {
+                "group": "Kubernetes",
+                "pages": [
+                  "4.16/kubernetes-integration"
+                ]
+              },
+              {
+                "group": "Apache CloudStack",
+                "pages": [
+                  "4.16/cloudstack/netris-cloudstack",
+                  "4.16/cloudstack/netris-cloudstack_p1",
+                  "4.16/cloudstack/netris-cloudstack_p2",
+                  "4.16/cloudstack/netris-cloudstack_p3",
+                  "4.16/cloudstack/netris-cloudstack_p4",
+                  "4.16/cloudstack/netris-cloudstack_p5"
+                ]
+              },
+              {
+                "group": "Terraform",
+                "pages": [
+                  "4.16/terraform-integration"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "version": "4.15",
+        "tabs": [
+          {
+            "tab": "Overview",
+            "groups": [
+              {
+                "group": "Get Started",
+                "pages": [
+                  "4.15/introduction",
+                  "4.15/definitions",
+                  "4.15/netris-architecture"
+                ],
+                "public": true
+              },
+              {
+                "group": "Try & Learn",
+                "pages": [
+                  "4.15/try-learn/nvidia-spectrum-x-scenario",
+                  "4.15/try-learn/onprem-k8s"
+                ]
+              },
+              {
+                "group": "Plan Your Deployment",
+                "pages": [
+                  "4.15/supported-platform-matrix",
+                  "4.15/supported-switch-hardware",
+                  "4.15/vpc-gateways-with-managed-fabric"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Deploy",
+            "groups": [
+              {
+                "group": "Controller",
+                "pages": [
+                  "4.15/installation/installation",
+                  "4.15/installation/controller-k3s-air-gap-ha",
+                  "4.15/installation/controller-k8s-installation",
+                  "4.15/installation/ztp"
+                ]
+              },
+              {
+                "group": "Network Switches",
+                "pages": [
+                  "4.15/switch-agent-installation",
+                  "4.15/nvidia-cumulus-v5.9-plus-switch-initial-setup",
+                  "4.15/nvidia-cumulus-v5-switch-initial-setup",
+                  "4.15/nvidia-cumulus-v3.7-switch-initial-setup",
+                  "4.15/edgecore-sonic-switch-initial-setup",
+                  "4.15/dell-sonic-switch-initial-setup",
+                  "4.15/ubuntu-switchdev-switch-initial-setup"
+                ]
+              },
+              {
+                "group": "Edge & Host Networking",
+                "pages": [
+                  "4.15/netris-softgate-hs",
+                  "4.15/ai-netris-host-networking"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Operate",
+            "groups": [
+              {
+                "group": "Fabric Management",
+                "pages": [
+                  "4.15/site",
+                  "4.15/vpc",
+                  "4.15/topology-management",
+                  "4.15/inventory-profile",
+                  "4.15/ipam",
+                  "4.15/bgp",
+                  "4.15/switch-ports",
+                  "4.15/lag",
+                  "4.15/maintenance-mode",
+                  "4.15/static-routing"
+                ]
+              },
+              {
+                "group": "Network Services",
+                "pages": [
+                  {
+                    "group": "V-Net",
+                    "pages": [
+                      "4.15/vnet",
+                      "4.15/dhcp-and-dhcp-relay",
+                      "4.15/link-aggregation-and-multihoming"
+                    ]
+                  },
+                  "4.15/server-cluster",
+                  "4.15/nat",
+                  "4.15/l4-load-balancer",
+                  "4.15/vpc-peering",
+                  "4.15/vpc-connect",
+                  "4.15/acls"
+                ]
+              },
+              {
+                "group": "Monitoring & Observability",
+                "pages": [
+                  "4.15/monitoring-observability/visibility",
+                  "4.15/monitoring-observability/topology-validation",
+                  "4.15/monitoring-observability/netq",
+                  "4.15/monitoring-observability/healthchecks",
+                  "4.15/monitoring-observability/looking-glass"
+                ]
+              },
+              {
+                "group": "Administration",
+                "pages": [
+                  "4.15/accounts",
+                  "4.15/custom-configuration-snippets",
+                  "4.15/labels",
+                  "4.15/release-notes",
+                  "4.15/untitled-page"
+                ]
+              }
+            ]
+          },
+          {
+            "tab": "Integrate",
+            "groups": [
+              {
+                "group": "NVIDIA Networking",
+                "pages": [
+                  "4.15/netris-ufm-integration",
+                  "4.15/netris-nvlink-integration",
+                  "4.15/evpn-on-host",
+                  "4.15/bluefield-3-dpus"
+                ]
+              },
+              {
+                "group": "Kubernetes",
+                "pages": [
+                  "4.15/kubernetes-integration"
+                ]
+              },
+              {
+                "group": "Apache CloudStack",
+                "pages": [
+                  "4.15/cloudstack/netris-cloudstack",
+                  "4.15/cloudstack/netris-cloudstack_p1",
+                  "4.15/cloudstack/netris-cloudstack_p2",
+                  "4.15/cloudstack/netris-cloudstack_p3",
+                  "4.15/cloudstack/netris-cloudstack_p4",
+                  "4.15/cloudstack/netris-cloudstack_p5"
+                ]
+              },
+              {
+                "group": "Terraform",
+                "pages": [
+                  "4.15/terraform-integration"
+                ]
+              }
             ]
           }
         ]

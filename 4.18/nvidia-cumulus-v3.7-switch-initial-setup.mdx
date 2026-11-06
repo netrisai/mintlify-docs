@@ -1,0 +1,114 @@
+---
+title: "Nvidia Cumulus v3.7 Switch Initial Setup"
+sidebarTitle: "Nvidia Cumulus v3.7"
+---
+
+<Note>
+  Further installation requires a Console and Internet connectivity via the management port!
+</Note>
+
+If the switch has pre-installed network operating system (NOS), it needs to be uninstalled first.
+
+1. NOS Uninstall (if pre-installed)
+
+To uninstall the current NOS, access **ONIE** from the GRUB menu and select the  **Uninstall OS** option.
+
+<Frame>
+  <img src="/images/uninstallOS.png" alt="uninstallOS" />
+</Frame>
+
+Once it's done, the switch will automatically reboot and get ready for the installation of the Cumulus Linux.
+
+2. NOS Install
+
+If there is no DHCP in the management network, stop the onie-discovery service and configure an IP address and default gateway manually.
+
+```shell
+onie-discovery-stop
+```
+
+```shell
+ip addr add <management IP address/prefix> dev eth0
+```
+
+```shell
+ip route add default via <gateway of the management network>
+```
+
+```shell
+echo "nameserver <DNS server address>" > /etc/resolv.conf
+```
+
+The Cumulus image should be available on a web server to which the switch has access through the local network or the Internet.
+
+Example:
+
+```shell
+onie-nos-install http://192.168.100.10/cumulus-linux-3.7.15-mlx-amd64.bin
+```
+
+After completion of the installation, the switch will automatically reboot.
+
+To login use the default username and password for Cumulus v3.7:
+
+`cumulus/CumulusLinux!`
+
+3. Set up the Out-of-Band (OOB) Management.
+
+Open the network interfaces file and add the IP address and other required details.
+
+```shell
+sudo vim /etc/network/interfaces
+```
+
+```shell
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+       address <management IP address/prefix length>
+       gateway <gateway of management network>
+
+source /etc/network/interfaces.d/*
+```
+
+```shell
+echo "nameserver <dns server>" | sudo tee /etc/resolv.conf
+```
+
+```shell
+sudo ifreload -a
+```
+
+4. Cumulus Linux license installation.
+
+```shell
+sudo cl-license -i
+```
+
+Copy/paste the Cumulus Linux license string, then press ctrl-d.
+
+5. Netris agent installation.
+
+Navigate to the Net–&gt;Inventory section and click the three vertical dots (⋮) on the right side of the switch you are provisioning. Then click Install Agent and copy the one-line installer command to your clipboard.
+
+<Frame>
+  <img src="/images/Switch-agent-installation-Inventory.png" alt="Switch agent installation Inventory" />
+</Frame>
+
+<Frame>
+  <img src="/images/Switch-agent-installation-oneliner.png" alt="Switch agent installation oneliner" />
+</Frame>
+
+<Frame>
+  <img src="/images/Switch-agent-installation-cli.png" alt="Switch agent installation cli" />
+</Frame>
+
+6. Reboot the switch
+
+```shell
+sudo reboot
+```

@@ -1,5 +1,5 @@
 ---
-title: "Prerequisites"
+title: "CloudStack: Prerequisites"
 ---
 
 [Switch fabric up & running](/vpc-gateways-with-managed-fabric) and [connected to ISP](/bgp)
@@ -250,7 +250,7 @@ resource "netris_server" "server_hypervisor" {
   "cloudstack": {
     "mgmt": {
       "bridge-name": "cloudbr0",
-      "ipv4": "10.100.1.${count.index + 2}"/21",
+      "ipv4": "10.100.1.${count.index + 2}/21",
       "nameservers": ["1.1.1.1", "8.8.8.8"]
     }
   }
