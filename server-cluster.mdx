@@ -35,7 +35,7 @@ Here are several template examples followed by detailed descriptions of every fi
   For l3vpn type to function properly, the /31 links' addresses must be prepopulated. This is best done with Terraform during the server onboarding phase. See [Netris Terraform Provider](/terraform-integration) for details.
 </Warning>
 
-### Server Cluster Template Examples:
+### Server Cluster Template Examples
 
 #### Ethernet-only Fabric Example
 
@@ -233,7 +233,7 @@ IPv6 is fully supported in Netris. This example showcases how to optionally enab
 ]
 ```
 
-### Template Fields Explained:
+### Template Fields Explained
 
 **Each object in the **Vnets** JSON array may include a combination of the following key-value pairs**
 
@@ -249,13 +249,13 @@ IPv6 is fully supported in Netris. This example showcases how to optionally enab
   - **ipv4Gateway**: When `type:l2vpn` one of the following values:
 
     - A string specifying the IPv4 gateway for V-Net in CIDR notation
-    - A string `specify` to force the operator to enter the gateway explicitly at cluster creation
+    - A string `specify` to require the operator to enter the gateway explicitly at cluster creation
     - an object (see [Advanced Uses](/server-cluster#advanced-uses)) with the following properties: **assignType** (only `auto` is permitted at this time), **allocation** (the IPv4 address allocation, a supernet from which the child subnets will be derived), **childSubnetPrefixLength** (the prefix length for child subnets), and **hostnum** (the host number for the gateway).
   - **ipv4DhcpEnabled**: A boolean to enable/disable DHCP for IPv4.
   - **ipv6Gateway**: When `type:l2vpn` one of the following values:
 
     - A string specifying the IPv6 gateway for V-Net in CIDR notation
-    - A string `specify` to force the operator to enter the gateway explicitly at cluster creation
+    - A string `specify` to require the operator to enter the gateway explicitly at cluster creation
     - an object (see [Advanced Uses](/server-cluster#advanced-uses)) with the same **assignType**, **allocation**, **childSubnetPrefixLength**, and **hostnum** properties as above (IPv6-scoped).
   - **Ufm**: Nvidia UFM controller identifier (`ufm_id`) for V-Net `type:netris-ufm`. See [Netris UFM documentation](/netris-ufm-integration) for details.
   - **Pkey**: Pkey settings when V-Net `type:netris-ufm`. Only `auto` is permitted at this time.
@@ -478,7 +478,7 @@ Once a node is selected as dedicated in a cluster:
 - It cannot be added as a dedicated member to any other cluster
 - It cannot be added as a shared node into the same cluster, but it can be added as a shared node to any other cluster.
 
-### Server Cluster Fields Explained:
+### Server Cluster Fields Explained
 
 - **Name**: A descriptive name for the server cluster.
 - **Admin**: The administrative owner of this server cluster.

@@ -1,0 +1,76 @@
+---
+title: "Link Aggregation (LAG)"
+sidebarTitle: "LAG"
+description: "Configure automatic or custom LAG and EVPN multi-homing in Netris to bond multiple switch ports for higher throughput and link redundancy."
+---
+
+**Link Aggregation (LAG)** — also known as link bundling, NIC bonding, or port teaming — combines multiple physical network connections in parallel to deliver higher aggregate throughput than any single link could sustain, while providing redundancy in case an individual link fails. The **Link Aggregation Control Protocol (LACP)** handles the collective management of those physical ports so that the network treats them as a single logical channel.
+
+Netris supports two modes of LAG configuration: **Automatic** (using EVPN Multi-Homing) and **Custom** (manually defined). Choose the mode that best matches your hardware capabilities and redundancy requirements.
+
+1st edit. not using branches
+
+---
+
+## Automatic LAG with EVPN Multi-Homing
+
+When LACP is configured on the server side, Netris automatically identifies matching switch port pairs and forms a LAG with EVPN Multi-Homing (EVPN-MH) enabled for any ports participating in a V-Net service. You do not need to manually create the LAG object.
+
+**EVPN Multi-Homing** provides an all-active redundancy model for multi-homed servers. All connections from a server to multiple switches are concurrently active — delivering high availability, load balancing, and seamless failover. If Active-Active Multi-Homing is not supported on your hardware, Netris automatically falls back to Active-Standby LACP LAG.
+
+<Note>
+  In both Active-Active and Active-Standby cases, LACP must be configured on the server side. If the server does not have LACP configured, the LAG falls back to non-LACP mode and one of the two links remains active.
+</Note>
+
+### Requirements for Active-Active Multi-Homing
+
+- Cumulus Linux 5.3 or higher
+- Netris 4.0 or higher
+- One port per switch (this limitation can be overcome with a Custom LAG)
+- A maximum of two switches in the EVPN-MH domain when using ASIC Spectrum A1
+
+### Enabling Automatic LAG
+
+To use Automatic LAG, enable the **Automatic Link Aggregation** setting in the Inventory Profile assigned to your switches. See the [Inventory Profiles](/4.15/inventory-profile) documentation for details.
+
+<Warning>
+  Enabling **Automatic Link Aggregation** in an Inventory Profile automatically disables MC-LAG for those devices. The two multihoming methods cannot operate simultaneously on the same switches.
+</Warning>
+
+### Adding a V-Net with EVPN-MH
+
+To create a V-Net that benefits from automatic EVPN-MH LAG, navigate to **Service → V-Net → +Add** and add the switch ports that connect to your multi-homed server. Netris agents will automatically configure LAG, LACP with EVPN-MH, and LACP fallback.
+
+---
+
+## Custom LAG
+
+A Custom LAG gives you direct control over which ports are bundled and how. Use Custom LAG in the following situations:
+
+- You need to aggregate **more than one port per switch** (with or without EVPN).
+- You need to **unconditionally disable LACP fallback** on the switch side. Note that EVPN-MH will be deactivated in this case.
+
+<Note>
+  A Custom LAG is always scoped to a single switch. However, if you add two or more Custom LAGs from different switches to the same V-Net, EVPN-MH is automatically activated.
+</Note>
+
+### Creating a Custom LAG
+
+<Steps>
+  <Step title="Navigate to Network Interfaces">
+    Go to **Network → Network Interfaces** in the Netris Controller web UI.
+  </Step>
+  <Step title="Add a new LAG">
+    Click **Add** to create a new LAG object and select the switch ports you want to bundle.
+  </Step>
+  <Step title="Set options">
+    Configure the required LAG options in the form, then save.
+  </Step>
+  <Step title="Add to V-Net (optional)">
+    To apply EVPN-MH, add two or more Custom LAGs (from different switches) to the same V-Net via **Service → V-Net**.
+  </Step>
+</Steps>
+
+<Tip>
+  You can also add ports to an existing LAG directly from the Switch Ports section using the **Add to LAG** quick action.
+</Tip>

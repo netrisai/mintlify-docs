@@ -1,0 +1,99 @@
+---
+title: "Ubuntu SwitchDev Switch Initial Setup"
+sidebarTitle: "Ubuntu SwitchDev"
+---
+
+<Note>
+  Further installation requires a Console and Internet connectivity via management port!
+</Note>
+
+If the switch has pre-installed network operating system (NOS), it needs to be uninstalled first.
+
+1. NOS Uninstall (if pre-installed)
+
+To uninstall the current NOS, access **ONIE** from the GRUB menu and select the  **Uninstall OS** option.
+
+<Frame>
+  <img src="/images/uninstallOS.png" alt="uninstallOS" />
+</Frame>
+
+Once it's done, the switch will automatically reboot and get ready for the installation of the Ubuntu SwitchDev.
+
+2. NOS Install
+
+If there is no DHCP in the management network, stop the onie-discovery service and configure an IP address and default gateway manually.
+
+```shell
+onie-discovery-stop
+```
+
+```shell
+ip addr add <management IP address/prefix> dev eth0
+```
+
+```shell
+ip route add default via <gateway of the management network>
+```
+
+```shell
+echo "nameserver <DNS server address>" > /etc/resolv.conf
+```
+
+Install Ubuntu SwitchDev using the Netris customized image:
+
+```shell
+onie-nos-install http://downloads.netris.ai/netris-ubuntu-18.04.1.bin
+```
+
+Default username/password
+
+`netris/newNet0ps`
+
+3. Set up the Out-of-Band (OOB) Management.
+
+Open the network interfaces file and add the IP address and other required details.
+
+```shell
+sudo vim /etc/network/interfaces
+```
+
+```shell
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet static
+        address <management IP address/prefix length>
+        gateway <gateway of management network>
+        dns-nameserver <dns server>
+
+source /etc/network/interfaces.d/*
+```
+
+```shell
+sudo ifreload -a
+```
+
+5. Netris agent installation.
+
+Navigate to the Net–&gt;Inventory section and click the three vertical dots (⋮) on the right side of the switch you are provisioning. Then click Install Agent and copy the one-line installer command to your clipboard.
+
+<Frame>
+  <img src="/images/Switch-agent-installation-Inventory-ubuntu.png" alt="Switch agent installation Inventory ubuntu" />
+</Frame>
+
+<Frame>
+  <img src="/images/Switch-agent-installation-oneliner-ubuntu.png" alt="Switch agent installation oneliner ubuntu" />
+</Frame>
+
+<Frame>
+  <img src="/images/Switch-agent-installation-cli-ubuntu.png" alt="Switch agent installation cli ubuntu" />
+</Frame>
+
+6. Reboot the switch
+
+```shell
+sudo reboot
+```
