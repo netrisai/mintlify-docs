@@ -3,6 +3,51 @@ title: "Release Notes"
 rss: true
 ---
 
+{/* source: https://www.netris.io/docs/en/latest/release-notes/4.20.0.html */}
+
+<Update label="November 5, 2026" tags={["4.20.0"]} description="Netris 4.20.0 Release Notes">
+  ### What's new in Netris 4.20.0?
+
+  Netris 4.20.0 adds port-down alarm suppression for unused switch ports, Active Directory authentication with a custom CA certificate, license enforcement for Controller services, and support for Cumulus Linux 5.18.3. It extends port and bond descriptions to Dell SONiC and sets IPv4 and IPv6 forwarding on Cumulus Linux 5.16 and 5.18 V-Nets based on whether they have a gateway.
+
+  Fixes include improved handling of interface labels when assigning server ports to V-Nets, changes to Controller behavior after a switch or SoftGate addition is attempted with invalid input, improved consistency in the API handling of incomplete requests, RADIUS secrets validation, and improvements to BFD sessions on SoftGates.
+
+  This release also strengthens eBGP session security and credential handling.
+
+  ### Features and Enhancements
+
+  - **Cumulus Linux 5.18.3 support**. Netris is now validated on Cumulus Linux 5.18.3.
+  - **Port-down alarm suppression for unused ports**. Netris no longer raises port-down alarms for switch ports that are not configured and are not part of the topology, and resumes alarming when such a port is added to the topology or configured.
+  - **Active Directory authentication with a custom CA certificate**. The Active Directory authentication scheme now accepts a CA certificate and a TLS server name, so the Controller can verify domain controllers whose LDAPS certificates come from a private CA, or that are reached by IP address or alias.
+  - **Controller license enforcement**. A valid installed license is now required to make changes to switch and SoftGate objects in the Controller, and to activate the RADIUS server and IP discovery. Devices keep forwarding traffic with their last applied configuration, and normal Controller operations resume as soon as a valid license is applied. This reverses the 4.19.0 change that let IP discovery run without a license.
+  - **Port and bond descriptions on devices (Dell SONiC)**. Descriptions set in the Controller for ports and bonds are now applied on the device, so operators can identify them directly on the switch.
+  - **IPv4 and IPv6 forwarding on V-Nets (Cumulus)**. Netris now disables IPv4 and IPv6 forwarding on a V-Net only when the V-Net has no gateway configured, so V-Nets with gateways behave the same on Cumulus Linux 5.16 and 5.18.
+
+  ### Bug fixes
+
+  - Fixed switch agent repeatedly reapplying changes to switch port configuration when the server’s interface is added as untagged to a V-Net, and adding the server to a Server Cluster causes that interface to become untagged in a different V-Net. Found in Netris 4.14 and later.
+  - Fixed interface label change being rejected when the old and new labels add the switch port to V-Net as untagged. Affected platforms: all. Found in Netris 4.19 and later.
+  - Fixed switch ports reserved through a server interface label not showing in the V-Net or the port's Free Up list. Found in Netris 4.19 and later.
+  - Fixed Controller unable to accept changes from any user for about a minute after an Add switch or SoftGate operation is rejected due to invalid input, such as a duplicate name or a MAC address. Found in Netris 4.19 and later.
+  - Fixed API and Terraform PATCH requests that the Controller rejects still saving part of their changes. Found in Netris 4.16 and later.
+  - Fixes to RADIUS shared secret and password saving and validation in Inventory Profiles and third-party Dynamic VPC Groups. Found in Netris 4.19 and later.
+  - Fixed BFD sessions with eBGP peers staying down on SoftGates for single-hop sessions when XDP is enabled, and all multihop sessions. Found in Netris 4.17 and later.
+
+  ### Security fixes
+
+  - Improved permissions and credential handling of eBGP sessions.
+
+  ### References
+
+  - [Supported Platforms](/supported-platform-matrix)
+  - [Supported Switch Hardware](/supported-switch-hardware)
+  - Schedule a [Demo](https://www.netris.io/demo/)
+  - Follow us on [LinkedIn](https://www.linkedin.com/company/netrisio/)
+  - Follow us on [YouTube](https://www.youtube.com/@netris_io)
+  - Follow us on [X-Twitter](https://x.com/netris_io)
+  - Join our [Slack](https://netris.slack.com/)
+</Update>
+
 {/* source: https://www.netris.io/docs/en/latest/release-notes/4.16.0.html */}
 <Update label="September 2, 2026" description="Netris 4.16.0 Release Notes" tags={["4.16.0"]}>
   ### What's new in Netris 4.16.0?
@@ -815,12 +860,12 @@ rss: true
 
   ### Features
 
-  ****Multi-VPC & Multi-VRF support****
+  **Multi-VPC & Multi-VRF support**
 
     - Netris 4.0.0 enables the configuration of multiple isolated VPCs within the same hardware. Each Netris VPC runs an isolated virtual routing and forwarding table (VRF) with BGP, static routing, and looking glass (centralized routing table lookup) support. Netris VPCs also provide isolated IPAM and V-Net (Layer2 with default gateway).
     - Netris SoftGate provided services: Load Balancer, NAT, Border Router, and SiteMesh are currently limited to a single, default VPC and will support multiple VPCs in the next release.
 
-  ****EVPN/VXLAN Multi-homing****
+  **EVPN/VXLAN Multi-homing**
 
     - Automatic Multi-Homed LAG with LACP is designed to provide easy and automatic physical network link redundancy for servers. There is no need for the network and systems engineers to negotiate the LAG and LACP settings manually anymore. Netris-managed switch-fabric now monitors LACP messages coming from servers and, by leveraging powerful EVPN/VXLAN capabilities of modern switches, will automatically make appropriate pairs of switch ports form a Link Aggregation with active/active or active/standby (depending on which the switch vendor supports mode) configurations.
     - Manual Multi-Homed LAG – while Automatic LAG is easy and convenient, there may be some special cases when the user needs to create a defined LAG/AGG interface and specify which switch ports exactly can and should be in the same LAG and with LACP on/off mode. This functionality is also based on EVPN/VXLAN multihoming. Hence you can configure MH-LAG across any switches, no matter if two switches are linked directly or transiting a spine switch.
@@ -964,15 +1009,15 @@ rss: true
 
   ### Features
 
-  ****SoftGate maintenance mode****
+  **SoftGate maintenance mode**
 
     Maintenance mode for SoftGate nodes can be enabled through editing each SoftGate node under Net→Inventory. When SoftGate is set for maintenance mode Netris agent will try to offload the traffic on another node so you can safely perform maintenance on deactivated SoftGate.
 
-  ****Multi-interface SoftGate (experimental)****
+  **Multi-interface SoftGate (experimental)**
 
     This feature allows you to instruct SoftGate to bind each V-Net to a specified interface (instead of bond0.`<vlanid>`) by using V-Net tags (int=”eth7”). This feature is only available for VPC Anywhere (switch fabric = dot1q Trunk). The anticipated use case is to use Netris SoftGate as a virtual machine to perform as a gateway for the VMware cluster (instead of using VMware NSX) Read the documentation for this feature.
 
-  ****Host reservation with type sys****
+  **Host reservation with type sys**
 
     Netris API (RestAPI only) allows reserving hosts in the IPAM. The anticipated use case is to be able to reserve some IP addresses that are being statically used by any systems so Netris doesn’t assume they are free for DHCP and Load Balancer use.
 
@@ -1005,11 +1050,11 @@ rss: true
 
   ### Features
 
-  ****V-Net tags.****
+  **V-Net tags.**
 
     Equinix Metal users can now optionally use tags for associating servers with Netris V-Net service. This comes handy, especially for Infrastructure as Code (IaC) situations, to request servers and network resources in a single iteration.
 
-  ****Create V-Net based on existing unmanaged Layer-2 services in Bare Metal Cloud environments.****
+  **Create V-Net based on existing unmanaged Layer-2 services in Bare Metal Cloud environments.**
 
     Layer-2 services that exist in a bare metal cloud environment but are not yet part of any service that is managed by Netris will show up under the V-Nets section marked as Unmanaged. Users can use the “Manage” function to easily create a new V-Net service that will automatically apply the VLAN id and the list of servers associated with.
 
